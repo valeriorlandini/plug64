@@ -24,7 +24,6 @@ target_sources(${BaseTargetName} PRIVATE
         Source/CustomLookAndFeel.cpp)
 
 juce_add_binary_data(BinaryData SOURCES
-        Resources/Logo.svg
         Resources/Font.ttf
 )
 
@@ -39,7 +38,6 @@ target_include_directories(${BaseTargetName} PRIVATE ${soutel_SOURCE_DIR})
 target_link_libraries(${BaseTargetName} PRIVATE
         BinaryData
 	juce_dsp
-	juce_osc
 	juce_audio_utils
 	juce_audio_devices
         juce_recommended_config_flags

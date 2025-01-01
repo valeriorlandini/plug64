@@ -35,10 +35,10 @@ juce::Label* CustomLookAndFeel::createSliderTextBox(juce::Slider& slider)
     float fontSize = slider.getHeight() * 0.75f;
     label->setFont(customFont.withHeight(fontSize));
 
-    label->setColour(juce::Label::textColourId, juce::Colours::darkslategrey);
+    label->setColour(juce::Label::textColourId, juce::Colours::whitesmoke);
     label->setColour(juce::Label::backgroundColourId, juce::Colours::transparentBlack);
-    label->setColour(juce::Label::outlineColourId, juce::Colours::darkslategrey);
-    label->setColour(juce::Label::textWhenEditingColourId, juce::Colours::darkslategrey);
+    label->setColour(juce::Label::outlineColourId, juce::Colours::transparentBlack);
+    label->setColour(juce::Label::textWhenEditingColourId, juce::Colours::whitesmoke);
 
     return label;
 }

@@ -32,7 +32,6 @@ public:
 private:
     Gain64AudioProcessor& audioProcessor;
     CustomLookAndFeel customLookAndFeel;
-    std::unique_ptr<juce::Drawable> logo;
     juce::Rectangle<float> logoBounds;
     juce::Label title;
     juce::Label masterGainLabel;
