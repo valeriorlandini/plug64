@@ -37,6 +37,7 @@ Gain64AudioProcessorEditor::Gain64AudioProcessorEditor(Gain64AudioProcessor& p)
     title.setText("Gain 64", juce::dontSendNotification);
     addAndMakeVisible(title);
 
+    masterGainLabel.setJustificationType(juce::Justification::horizontallyJustified);
     masterGainLabel.setText("MASTER", juce::dontSendNotification);
     addAndMakeVisible(masterGainLabel);
 
@@ -48,7 +49,7 @@ Gain64AudioProcessorEditor::Gain64AudioProcessorEditor(Gain64AudioProcessor& p)
     addAndMakeVisible(masterGainSlider);
     masterGainAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(p.treeState, "mastergain", masterGainSlider);
 
-    chGainLabel.setJustificationType(juce::Justification::centred);
+    chGainLabel.setJustificationType(juce::Justification::horizontallyJustified);
     chGainLabel.setText("CHANNEL", juce::dontSendNotification);
     addAndMakeVisible(chGainLabel);
 
@@ -82,6 +83,7 @@ Gain64AudioProcessorEditor::~Gain64AudioProcessorEditor()
 void Gain64AudioProcessorEditor::paint(juce::Graphics& g)
 {
     g.fillAll(juce::Colour(44, 48, 52));
+    resized();
 }
 
 void Gain64AudioProcessorEditor::resized()
