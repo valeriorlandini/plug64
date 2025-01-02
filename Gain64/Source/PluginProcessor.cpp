@@ -109,30 +109,19 @@ int Gain64AudioProcessor::getCurrentProgram()
 
 void Gain64AudioProcessor::setCurrentProgram(int index)
 {
-    index = 0;
-
-    if (index)
-    {
-        // Dummy, to avoid warnings from some compilers
-    }
+    juce::ignoreUnused(index);
 }
 
 const juce::String Gain64AudioProcessor::getProgramName(int index)
 {
-    if (index)
-    {
-        // Dummy, to avoid warnings from some compilers
-    }
+    juce::ignoreUnused(index);
+
     return {};
 }
 
 void Gain64AudioProcessor::changeProgramName(int index, const juce::String& newName)
 {
-    if (index)
-    {
-        // Dummy, to avoid warnings from some compilers
-    }
-    auto dummy = newName;
+    juce::ignoreUnused(index, newName);
 }
 
 void Gain64AudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
@@ -170,10 +159,7 @@ void Gain64AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::
     auto totalNumInputChannels = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
-    if (midiMessages.isEmpty())
-    {
-        // Dummy, to avoid warnings from some compilers
-    }
+    juce::ignoreUnused(midiMessages);
 
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
     {

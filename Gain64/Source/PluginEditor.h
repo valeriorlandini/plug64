@@ -20,7 +20,7 @@ Plug64. If not, see <https://www.gnu.org/licenses/>.
 #include "PluginProcessor.h"
 #include "CustomLookAndFeel.h"
 
-class Gain64AudioProcessorEditor : public juce::AudioProcessorEditor, public juce::Slider::Listener
+class Gain64AudioProcessorEditor : public juce::AudioProcessorEditor
 {
 public:
     Gain64AudioProcessorEditor(Gain64AudioProcessor&);
@@ -38,6 +38,7 @@ private:
     juce::Slider masterGainSlider;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> masterGainAttachment;
     juce::Label chGainLabel;
+    juce::ComboBox selectChBox;
     juce::Slider selectChSlider;
     std::array<juce::Slider, 64> chGainSliders;
     std::array<std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment>, 64> chGainAttachments;
@@ -45,14 +46,6 @@ private:
     juce::Typeface::Ptr customTypeface;
     juce::Font customFont;
     float fontSize;
-
-    void sliderValueChanged(juce::Slider* changedSlider) override
-    {
-        if (changedSlider == &selectChSlider)
-        {
-            resized();
-        }
-    }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Gain64AudioProcessorEditor)
 };

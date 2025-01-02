@@ -26,8 +26,17 @@ public:
     ~CustomLookAndFeel() override;
 
     juce::Label* createSliderTextBox(juce::Slider& slider) override;
+    juce::Font getComboBoxFont(juce::ComboBox& box) override;
+    juce::Font getPopupMenuFont() override;   
+    void drawPopupMenuBackground(juce::Graphics& g, int, int) override;
+    juce::Path getTickShape(float) override;
+    void drawPopupMenuUpDownArrow(juce::Graphics&, int, int, bool) override {}
+    void drawComboBox(juce::Graphics& g, int width, int height, bool,
+                      int, int, int, int, juce::ComboBox& box) override;
+    void positionComboBoxText(juce::ComboBox& box, juce::Label& label) override;
     juce::Font customFont;
 
 private:
+    float comboFontSize = 0.0f;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CustomLookAndFeel)
 };
