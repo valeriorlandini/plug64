@@ -29,12 +29,12 @@ Gain64AudioProcessorEditor::Gain64AudioProcessorEditor(Gain64AudioProcessor& p)
     getConstrainer()->setFixedAspectRatio(2.0f);
 
     getLookAndFeel().setColour(juce::Label::textColourId, juce::Colours::whitesmoke);
-    //getLookAndFeel().setColour(juce::Label::backgroundColourId, juce::Colours::darkslategrey);
-    //getLookAndFeel().setColour(juce::Slider::textBoxTextColourId, juce::Colours::darkslategrey);
     getLookAndFeel().setColour(juce::Slider::trackColourId, juce::Colour(101, 142, 162));
     getLookAndFeel().setDefaultSansSerifTypeface(customTypeface);
 
-    title.setText("Gain 64", juce::dontSendNotification);
+    header.setText("Plug64", juce::dontSendNotification);
+    addAndMakeVisible(header);
+    title.setText("GAIN64", juce::dontSendNotification);
     addAndMakeVisible(title);
 
     masterGainLabel.setText("MASTER", juce::dontSendNotification);
@@ -48,8 +48,10 @@ Gain64AudioProcessorEditor::Gain64AudioProcessorEditor(Gain64AudioProcessor& p)
     masterGainSlider.setPopupDisplayEnabled(false, false, this);
     addAndMakeVisible(masterGainSlider);
     masterGainAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(p.treeState, "mastergain", masterGainSlider);
+    masterGainSlider.setSkewFactor(1.5);
+    masterGainSlider.setTextValueSuffix(" dB");
 
-    chGainLabel.setText("CH.", juce::dontSendNotification);
+    chGainLabel.setText("CHAN", juce::dontSendNotification);
     chGainLabel.setJustificationType(juce::Justification::left);
     addAndMakeVisible(chGainLabel);
 
@@ -76,6 +78,7 @@ Gain64AudioProcessorEditor::Gain64AudioProcessorEditor(Gain64AudioProcessor& p)
         addAndMakeVisible(chGainSliders[i]);
         auto paramID = "chgain" + std::to_string(i+1);
         chGainAttachments[i] = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(p.treeState, paramID, chGainSliders[i]);
+        chGainSliders[i].setTextValueSuffix(" dB");
     }
 }
 
@@ -95,20 +98,23 @@ void Gain64AudioProcessorEditor::resized()
     fontSize = (float)blockUI * 0.75f;
     customFont = customFont.withHeight(fontSize);
 
-    title.setJustificationType(juce::Justification::centred);
+    header.setJustificationType(juce::Justification::left);
+    header.setBounds(blockUI, 0, blockUI * 14, blockUI * 2);
+    header.setFont(customFont.withHeight(fontSize));
+    title.setJustificationType(juce::Justification::left);
     title.setBounds(blockUI, blockUI, blockUI * 14, blockUI * 2);
     title.setFont(customFont.withHeight(fontSize * 2.0f));
 
-    masterGainLabel.setJustificationType(juce::Justification::left);
+    masterGainLabel.setJustificationType(juce::Justification::centredLeft);
     masterGainLabel.setBounds(blockUI, blockUI * 4, blockUI * 3, blockUI);
     masterGainLabel.setFont(customFont.withHeight(fontSize));
     masterGainSlider.setBounds(blockUI * 5, blockUI * 4, blockUI * 10, blockUI);
     masterGainSlider.setTextBoxStyle(juce::Slider::TextBoxLeft, false, blockUI * 10, blockUI);
 
-    chGainLabel.setJustificationType(juce::Justification::left);
+    chGainLabel.setJustificationType(juce::Justification::centredLeft);
     chGainLabel.setFont(customFont.withHeight(fontSize));
-    chGainLabel.setBounds(blockUI, blockUI * 6, (int)((float)blockUI * 1.5f), blockUI);
-    selectChBox.setBounds(blockUI * 3, blockUI * 6, (int)((float)blockUI * 1.5f), blockUI);
+    chGainLabel.setBounds(blockUI, blockUI * 6, blockUI * 2, blockUI);
+    selectChBox.setBounds((int)((float)blockUI * 2.5f), blockUI * 6, (int)((float)blockUI * 1.5f), blockUI);
     for (unsigned int c = 0; c < 64; c++)
     {
         if ((unsigned int)(selectChBox.getSelectedId()) == c)

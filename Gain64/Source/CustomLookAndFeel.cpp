@@ -28,7 +28,6 @@ CustomLookAndFeel::~CustomLookAndFeel()
 
 juce::Label* CustomLookAndFeel::createSliderTextBox(juce::Slider& slider)
 {
-    // Create a custom label for the slider's text box
     auto* label = new juce::Label();
     label->setJustificationType(juce::Justification::centred);
 
@@ -75,12 +74,19 @@ void CustomLookAndFeel::drawComboBox(juce::Graphics& g, int width, int height, b
     g.setColour(box.findColour(juce::ComboBox::backgroundColourId));
     g.fillRoundedRectangle(boxBounds.toFloat(), cornerSize);
     g.setColour(box.findColour(juce::ComboBox::outlineColourId));
-    g.drawRoundedRectangle(boxBounds.toFloat().reduced(0.5f, 0.5f), cornerSize, 1.0f);
+    g.drawRoundedRectangle(boxBounds.toFloat(), cornerSize, 0.0f);
 }
 
 void CustomLookAndFeel::positionComboBoxText(juce::ComboBox& box, juce::Label& label)
 {
-    label.setBounds(1, 1, box.getWidth(), box.getHeight());
+    label.setBounds(0, 0, box.getWidth(), box.getHeight());
     label.setFont(getComboBoxFont(box));
     label.setJustificationType(juce::Justification::centred);
+}
+
+juce::PopupMenu::Options CustomLookAndFeel::getOptionsForComboBoxPopupMenu (juce::ComboBox& box, juce::Label&)
+{
+    juce::PopupMenu::Options options;
+    juce::Rectangle<int> bounds = box.getScreenBounds();
+    return options.withTargetScreenArea(bounds);
 }

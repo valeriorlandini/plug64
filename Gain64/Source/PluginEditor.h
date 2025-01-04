@@ -32,7 +32,7 @@ public:
 private:
     Gain64AudioProcessor& audioProcessor;
     CustomLookAndFeel customLookAndFeel;
-    juce::Rectangle<float> logoBounds;
+    juce::Label header;
     juce::Label title;
     juce::Label masterGainLabel;
     juce::Slider masterGainSlider;
@@ -46,6 +46,16 @@ private:
     juce::Typeface::Ptr customTypeface;
     juce::Font customFont;
     float fontSize;
+
+    std::function<juce::String(double)> appendDb = [](double value)
+    {
+        return juce::String(value) + " dB";
+    };
+
+    std::function<double(const juce::String&)> removeDb = [](const juce::String& text)
+    {
+        return text.removeCharacters(" dB").getDoubleValue();
+    };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Gain64AudioProcessorEditor)
 };

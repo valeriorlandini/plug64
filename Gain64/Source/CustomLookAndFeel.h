@@ -34,9 +34,11 @@ public:
     void drawComboBox(juce::Graphics& g, int width, int height, bool,
                       int, int, int, int, juce::ComboBox& box) override;
     void positionComboBoxText(juce::ComboBox& box, juce::Label& label) override;
+    juce::PopupMenu::Options getOptionsForComboBoxPopupMenu(juce::ComboBox& box, juce::Label&) override;
     juce::Font customFont;
 
 private:
     float comboFontSize = 0.0f;
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CustomLookAndFeel)
 };
