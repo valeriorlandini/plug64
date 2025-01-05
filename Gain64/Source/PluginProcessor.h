@@ -72,6 +72,8 @@ public:
 
     std::array<std::atomic<float>*, 64> chGainParameters = {nullptr};
     std::atomic<float>* masterGainParameter = nullptr;
+
+    juce::Value selChannel;
     
 private:
     std::array<juce::dsp::ProcessorChain<juce::dsp::Gain<float>, juce::dsp::Gain<float>>, 64> processorChains;

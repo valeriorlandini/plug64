@@ -33,19 +33,24 @@ Gain64AudioProcessor::Gain64AudioProcessor() :
               [&]() {
                   juce::AudioProcessorValueTreeState::ParameterLayout layout;
 
-                  layout.add(std::make_unique<juce::AudioParameterFloat>("mastergain", "Master Gain", -70.0f, 12.0f, 0.0f));
+                  layout.add(std::make_unique<juce::AudioParameterFloat>("mastergain", "Master Gain", juce::NormalisableRange<float>(-70.0f, 12.0f, 0.01f, 3.0f, false), 0.0f));
 
                   for (unsigned int i = 0; i < 64; i++)
                   {
                       auto parameterID = "chgain" + std::to_string(i+1);
-                      auto parameterName = "Channel Gain " + std::to_string(i+1);
-                      layout.add(std::make_unique<juce::AudioParameterFloat>(parameterID, parameterName, -70.0f, 12.0f, 0.0f));
+                      auto parameterName = "Channel " + std::to_string(i+1) + " Gain";
+                      layout.add(std::make_unique<juce::AudioParameterFloat>(parameterID, parameterName, juce::NormalisableRange<float>(-70.0f, 12.0f, 0.01f, 3.0f, false), 0.0f));
                   }
 
                   return layout;
               }()
     )
 {
+    if (!treeState.state.hasProperty("selChannel"))
+    {
+        treeState.state.setProperty("selchannel", 1, nullptr);
+    }
+
     masterGainParameter = treeState.getRawParameterValue("mastergain");
 
     for (unsigned int ch = 0; ch < 64; ++ch)
@@ -206,6 +211,11 @@ void Gain64AudioProcessor::setStateInformation(const void* data, int sizeInBytes
         if (xmlState->hasTagName(treeState.state.getType()))
         {
             treeState.replaceState(juce::ValueTree::fromXml(*xmlState));
+
+            if (treeState.state.hasProperty("selchannel"))
+            {
+                selChannel.referTo(treeState.state.getPropertyAsValue("selchannel", nullptr));
+            }
         }
     }
 }

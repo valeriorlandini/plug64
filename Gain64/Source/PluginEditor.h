@@ -34,9 +34,13 @@ private:
     CustomLookAndFeel customLookAndFeel;
     juce::Label header;
     juce::Label title;
+    juce::Label resetLabel;
+    juce::ShapeButton resetButton{"reset", juce::Colour(243, 255, 148), juce::Colour(243, 255, 148), juce::Colour(214, 108, 87)};
+    juce::Label masterLabel;
     juce::Label masterGainLabel;
     juce::Slider masterGainSlider;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> masterGainAttachment;
+    juce::Label chLabel;
     juce::Label chGainLabel;
     juce::ComboBox selectChBox;
     juce::Slider selectChSlider;
