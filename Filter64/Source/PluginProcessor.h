@@ -33,11 +33,11 @@ Plug64. If not, see <https://www.gnu.org/licenses/>.
 #include <juce_osc/juce_osc.h>
 #include "BinaryData.h"
 
-class Gain64AudioProcessor : public juce::AudioProcessor
+class Filter64AudioProcessor : public juce::AudioProcessor
 {
 public:
-    Gain64AudioProcessor();
-    ~Gain64AudioProcessor() override;
+    Filter64AudioProcessor();
+    ~Filter64AudioProcessor() override;
 
     void prepareToPlay(double sampleRate, int samplesPerBlock) override;
     void releaseResources() override;
@@ -69,13 +69,47 @@ public:
 
     juce::AudioProcessorValueTreeState treeState;
 
-    std::array<std::atomic<float>*, 64> chGainParameters = {nullptr};
-    std::atomic<float>* masterGainParameter = nullptr;
+    std::array<std::atomic<float>*, 64> chTypeParameters = {nullptr};
+    std::array<std::atomic<float>*, 64> chCutoffParameters = {nullptr};
+    std::array<std::atomic<float>*, 64> chResonanceParameters = {nullptr};
+    std::array<std::atomic<float>*, 64> chDriveParameters = {nullptr};
+    std::atomic<float>* masterTypeParameter = nullptr;
+    std::atomic<float>* masterCutoffParameter = nullptr;
+    std::atomic<float>* masterResonanceParameter = nullptr;
+    std::atomic<float>* masterDriveParameter = nullptr;
 
     juce::Value selChannel;
     
 private:
-    std::array<juce::dsp::ProcessorChain<juce::dsp::Gain<float>, juce::dsp::Gain<float>>, 64> processorChains;
+    std::array<juce::dsp::ProcessorChain<juce::dsp::LadderFilter<float>, juce::dsp::LadderFilter<float>>, 64> processorChains;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Gain64AudioProcessor);
+    inline void updateParams()
+    {
+        for (unsigned int ch = 0; ch < 64; ++ch)
+        {
+            processorChains.at(ch).get<0>().setCutoffFrequencyHz(*(chCutoffParameters.at(ch)));
+            processorChains.at(ch).get<0>().setResonance(*(chResonanceParameters.at(ch)) * 0.01f);
+            float chDrive = *(chDriveParameters.at(ch));
+            processorChains.at(ch).get<0>().setDrive(juce::jmap(chDrive, 0.0f, 100.0f, 1.0f, 10.0f));
+            auto chFilterType = static_cast<int>(*(chTypeParameters.at(ch)));
+            processorChains.at(ch).get<0>().setEnabled(chFilterType != 0);
+            if (chFilterType > 0)
+            {
+                processorChains.at(ch).get<0>().setMode(static_cast<juce::dsp::LadderFilterMode>(chFilterType - 1));
+            }
+
+            processorChains.at(ch).get<1>().setCutoffFrequencyHz(*masterCutoffParameter);
+            processorChains.at(ch).get<1>().setResonance(*masterResonanceParameter * 0.01f);
+            float masterDrive = *masterDriveParameter;
+            processorChains.at(ch).get<1>().setDrive(juce::jmap(masterDrive, 0.0f, 100.0f, 1.0f, 10.0f));
+            auto masterFilterType = static_cast<int>(*masterTypeParameter);
+            processorChains.at(ch).get<1>().setEnabled(masterFilterType != 0);
+            if (masterFilterType > 0)
+            {
+                processorChains.at(ch).get<1>().setMode(static_cast<juce::dsp::LadderFilterMode>(masterFilterType - 1));
+            }
+        }   
+    }
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Filter64AudioProcessor);
 };

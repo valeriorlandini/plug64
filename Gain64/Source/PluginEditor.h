@@ -51,15 +51,5 @@ private:
     juce::Font customFont;
     float fontSize;
 
-    std::function<juce::String(double)> appendDb = [](double value)
-    {
-        return juce::String(value) + " dB";
-    };
-
-    std::function<double(const juce::String&)> removeDb = [](const juce::String& text)
-    {
-        return text.removeCharacters(" dB").getDoubleValue();
-    };
-
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Gain64AudioProcessorEditor)
 };

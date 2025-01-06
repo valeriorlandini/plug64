@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.19)
 
-set(BaseTargetName Gain64)
-set(PluginName "Gain64")
+set(BaseTargetName Filter64)
+set(PluginName "Filter64")
 
 juce_add_plugin("${BaseTargetName}"
         COMPANY_NAME "Valerio Orlandini"
@@ -12,11 +12,11 @@ juce_add_plugin("${BaseTargetName}"
         EDITOR_WANTS_KEYBOARD_FOCUS FALSE
         COPY_PLUGIN_AFTER_BUILD FALSE
         PLUGIN_MANUFACTURER_CODE Vorl
-        PLUGIN_CODE Ga64
+        PLUGIN_CODE Fi64
         FORMATS AU VST3 LV2
         PRODUCT_NAME "${PluginName}"
-	BUNDLE_ID "com.valeriorlandini.gain64"
-	LV2URI "http://www.valeriorlandini.com/plugins/gain64")
+	BUNDLE_ID "com.valeriorlandini.filter64"
+	LV2URI "http://www.valeriorlandini.com/plugins/filter64")
 
 target_sources(${BaseTargetName} PRIVATE
         Source/PluginProcessor.cpp

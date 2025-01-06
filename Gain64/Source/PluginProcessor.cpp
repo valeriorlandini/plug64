@@ -135,9 +135,9 @@ void Gain64AudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 
     for (unsigned int ch = 0; ch < (unsigned int)std::min(getTotalNumInputChannels(), 64); ch++)
     {
-        processorChains.at(ch).get<0>().setGainDecibels(*masterGainParameter);
-        processorChains.at(ch).get<1>().setGainDecibels(*(chGainParameters.at(ch)));
         processorChains.at(ch).prepare(spec);
+        processorChains.at(ch).get<0>().setGainDecibels(*(chGainParameters.at(ch)));
+        processorChains.at(ch).get<1>().setGainDecibels(*masterGainParameter);
     }
 }
 
@@ -177,8 +177,8 @@ void Gain64AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::
     {
         if (ch < 64)
         {
-            processorChains.at(ch).get<0>().setGainDecibels(*masterGainParameter);
-            processorChains.at(ch).get<1>().setGainDecibels(*(chGainParameters.at(ch)));
+            processorChains.at(ch).get<0>().setGainDecibels(*(chGainParameters.at(ch)));
+            processorChains.at(ch).get<1>().setGainDecibels(*masterGainParameter);
             auto channelBlock = block.getSingleChannelBlock(ch);
             juce::dsp::ProcessContextReplacing<float> context(channelBlock);
             processorChains.at(ch).process(context);

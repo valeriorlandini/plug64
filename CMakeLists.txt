@@ -35,4 +35,9 @@ set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 # Require libraries
 find_package(juce REQUIRED)
 
+juce_add_binary_data(BinaryData SOURCES
+        Resources/Font.ttf
+)
+
+add_subdirectory(Filter64)
 add_subdirectory(Gain64)
