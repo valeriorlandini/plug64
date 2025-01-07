@@ -1,6 +1,6 @@
 /******************************************************************************
 This file is part of Plug64.
-Copyright 2024 Valerio Orlandini <valeriorlandini@gmail.com>.
+Copyright 2024-2025 Valerio Orlandini <valeriorlandini@gmail.com>.
 
 Plug64 is free software: you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
@@ -31,39 +31,41 @@ Filter64AudioProcessor::Filter64AudioProcessor() :
                   ),
 #endif
     treeState(*this, nullptr, juce::Identifier("Filter64Parameters"),
-              [&]() {
-                  juce::AudioProcessorValueTreeState::ParameterLayout layout;
+              [&]()
+{
+    juce::AudioProcessorValueTreeState::ParameterLayout layout;
 
-                  layout.add(std::make_unique<juce::AudioParameterFloat>("mastertype", "Master Filter", juce::NormalisableRange<float>(0.0f, 6.0f, 1.0f), 0.0f));
-                  layout.add(std::make_unique<juce::AudioParameterFloat>("mastercutoff", "Master Cutoff", juce::NormalisableRange<float>(20.0f, 20000.0f, 1.0f, 0.4f, false), 20000.0f));
-                  layout.add(std::make_unique<juce::AudioParameterFloat>("masterresonance", "Master Resonance", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 50.0f));
-                  layout.add(std::make_unique<juce::AudioParameterFloat>("masterdrive", "Master Drive", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f));
+    layout.add(std::make_unique<juce::AudioParameterFloat>("mastertype", "Master Filter", juce::NormalisableRange<float>(0.0f, 6.0f, 1.0f), 0.0f));
+    layout.add(std::make_unique<juce::AudioParameterFloat>("mastercutoff", "Master Cutoff", juce::NormalisableRange<float>(20.0f, 20000.0f, 1.0f, 0.4f, false), 20000.0f));
+    layout.add(std::make_unique<juce::AudioParameterFloat>("masterresonance", "Master Resonance", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 5.0f));
+    layout.add(std::make_unique<juce::AudioParameterFloat>("masterdrive", "Master Drive", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f));
 
-                  for (unsigned int i = 0; i < 64; i++)
-                  {
-                      std::string ch_str = std::to_string(i+1);
-                      std::string parameterID, parameterName;
+    for (unsigned int i = 0; i < 64; i++)
+    {
+        std::string ch_str = std::to_string(i+1);
+        std::string parameterID, parameterName;
 
-                      parameterID = "chtype" + ch_str;
-                      parameterName = "Channel " + ch_str + " Filter";
-                      layout.add(std::make_unique<juce::AudioParameterFloat>(parameterID, parameterName,juce::NormalisableRange<float>(0.0f, 6.0f, 1.0f), 0.0f));
+        parameterID = "chtype" + ch_str;
+        parameterName = "Channel " + ch_str + " Filter";
+        layout.add(std::make_unique<juce::AudioParameterFloat>(parameterID, parameterName,juce::NormalisableRange<float>(0.0f, 6.0f, 1.0f), 0.0f));
 
-                      parameterID = "chcutoff" + ch_str;
-                      parameterName = "Channel " + ch_str + " Cutoff";
-                      layout.add(std::make_unique<juce::AudioParameterFloat>(parameterID, parameterName, juce::NormalisableRange<float>(20.0f, 20000.0f, 1.0f, 0.4f, false), 20000.0f));
+        parameterID = "chcutoff" + ch_str;
+        parameterName = "Channel " + ch_str + " Cutoff";
+        layout.add(std::make_unique<juce::AudioParameterFloat>(parameterID, parameterName, juce::NormalisableRange<float>(20.0f, 20000.0f, 1.0f, 0.4f, false), 20000.0f));
 
-                      parameterID = "chresonance" + ch_str;
-                      parameterName = "Channel " + ch_str + " Resonance";
-                      layout.add(std::make_unique<juce::AudioParameterFloat>(parameterID, parameterName, juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 50.0f));
+        parameterID = "chresonance" + ch_str;
+        parameterName = "Channel " + ch_str + " Resonance";
+        layout.add(std::make_unique<juce::AudioParameterFloat>(parameterID, parameterName, juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 5.0f));
 
-                      parameterID = "chdrive" + ch_str;
-                      parameterName = "Channel " + ch_str + " Drive";
-                      layout.add(std::make_unique<juce::AudioParameterFloat>(parameterID, parameterName, juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f));
-                  }
+        parameterID = "chdrive" + ch_str;
+        parameterName = "Channel " + ch_str + " Drive";
+        layout.add(std::make_unique<juce::AudioParameterFloat>(parameterID, parameterName, juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f));
+    }
 
-                  return layout;
-              }()
-    )
+    return layout;
+}
+()
+         )
 {
     if (!treeState.state.hasProperty("selChannel"))
     {

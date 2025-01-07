@@ -1,6 +1,6 @@
 /******************************************************************************
 This file is part of Plug64.
-Copyright 2024 Valerio Orlandini <valeriorlandini@gmail.com>.
+Copyright 2024-2025 Valerio Orlandini <valeriorlandini@gmail.com>.
 
 Plug64 is free software: you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
@@ -30,7 +30,6 @@ Plug64. If not, see <https://www.gnu.org/licenses/>.
 #include <juce_graphics/juce_graphics.h>
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <juce_gui_extra/juce_gui_extra.h>
-#include <juce_osc/juce_osc.h>
 #include "BinaryData.h"
 
 class Gain64AudioProcessor : public juce::AudioProcessor
@@ -73,7 +72,7 @@ public:
     std::atomic<float>* masterGainParameter = nullptr;
 
     juce::Value selChannel;
-    
+
 private:
     std::array<juce::dsp::ProcessorChain<juce::dsp::Gain<float>, juce::dsp::Gain<float>>, 64> processorChains;
 

@@ -35,6 +35,8 @@ set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 # Require libraries
 find_package(juce REQUIRED)
 
+include_directories(${JUCE_INCLUDE_DIRS})
+
 juce_add_binary_data(BinaryData SOURCES
         Resources/Font.ttf
 )

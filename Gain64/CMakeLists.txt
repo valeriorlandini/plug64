@@ -21,7 +21,7 @@ juce_add_plugin("${BaseTargetName}"
 target_sources(${BaseTargetName} PRIVATE
         Source/PluginProcessor.cpp
         Source/PluginEditor.cpp
-        Source/CustomLookAndFeel.cpp)
+        ${CMAKE_SOURCE_DIR}/Shared/CustomLookAndFeel.cpp)
 
 target_compile_definitions(${BaseTargetName}
         PUBLIC
@@ -29,7 +29,7 @@ target_compile_definitions(${BaseTargetName}
         JUCE_USE_CURL=0
         JUCE_VST3_CAN_REPLACE_VST2=0)
 
-target_include_directories(${BaseTargetName} PRIVATE ${soutel_SOURCE_DIR})
+target_include_directories(${BaseTargetName} PRIVATE ${CMAKE_SOURCE_DIR}/Shared)
 
 target_link_libraries(${BaseTargetName} PRIVATE
         BinaryData

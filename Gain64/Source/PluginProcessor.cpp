@@ -1,6 +1,6 @@
 /******************************************************************************
 This file is part of Plug64.
-Copyright 2024 Valerio Orlandini <valeriorlandini@gmail.com>.
+Copyright 2024-2025 Valerio Orlandini <valeriorlandini@gmail.com>.
 
 Plug64 is free software: you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
@@ -30,21 +30,23 @@ Gain64AudioProcessor::Gain64AudioProcessor() :
                   ),
 #endif
     treeState(*this, nullptr, juce::Identifier("Gain64Parameters"),
-              [&]() {
-                  juce::AudioProcessorValueTreeState::ParameterLayout layout;
+              [&]()
+{
+    juce::AudioProcessorValueTreeState::ParameterLayout layout;
 
-                  layout.add(std::make_unique<juce::AudioParameterFloat>("mastergain", "Master Gain", juce::NormalisableRange<float>(-70.0f, 12.0f, 0.01f, 3.0f, false), 0.0f));
+    layout.add(std::make_unique<juce::AudioParameterFloat>("mastergain", "Master Gain", juce::NormalisableRange<float>(-70.0f, 12.0f, 0.01f, 3.0f, false), 0.0f));
 
-                  for (unsigned int i = 0; i < 64; i++)
-                  {
-                      auto parameterID = "chgain" + std::to_string(i+1);
-                      auto parameterName = "Channel " + std::to_string(i+1) + " Gain";
-                      layout.add(std::make_unique<juce::AudioParameterFloat>(parameterID, parameterName, juce::NormalisableRange<float>(-70.0f, 12.0f, 0.01f, 3.0f, false), 0.0f));
-                  }
+    for (unsigned int i = 0; i < 64; i++)
+    {
+        auto parameterID = "chgain" + std::to_string(i+1);
+        auto parameterName = "Channel " + std::to_string(i+1) + " Gain";
+        layout.add(std::make_unique<juce::AudioParameterFloat>(parameterID, parameterName, juce::NormalisableRange<float>(-70.0f, 12.0f, 0.01f, 3.0f, false), 0.0f));
+    }
 
-                  return layout;
-              }()
-    )
+    return layout;
+}
+()
+         )
 {
     if (!treeState.state.hasProperty("selChannel"))
     {

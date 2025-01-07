@@ -1,6 +1,6 @@
 /******************************************************************************
 This file is part of Plug64.
-Copyright 2024 Valerio Orlandini <valeriorlandini@gmail.com>.
+Copyright 2024-2025 Valerio Orlandini <valeriorlandini@gmail.com>.
 
 Plug64 is free software: you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
@@ -23,13 +23,12 @@ Filter64AudioProcessorEditor::Filter64AudioProcessorEditor(Filter64AudioProcesso
       customTypeface(juce::Typeface::createSystemTypefaceFor(BinaryData::Font_ttf, BinaryData::Font_ttfSize)),
       customFont(juce::Font(juce::FontOptions().withTypeface(customTypeface)))
 {
-    setSize(500, 400);
-    setResizeLimits(400, 200, 3000, 1500); /// CHECK!
+    setSize(500, 375);
+    setResizeLimits(400, 300, 3000, 2250);
     setResizable(true, p.wrapperType != Filter64AudioProcessor::wrapperType_AudioUnitv3);
-    getConstrainer()->setFixedAspectRatio(1.25f);
+    getConstrainer()->setFixedAspectRatio(4.0f/3.0f);
 
     getLookAndFeel().setColour(juce::Label::textColourId, juce::Colours::whitesmoke);
-    getLookAndFeel().setColour(juce::Slider::trackColourId, juce::Colour(101, 142, 162));
     getLookAndFeel().setDefaultSansSerifTypeface(customTypeface);
 
     header.setText("Plug64", juce::dontSendNotification);
@@ -47,7 +46,7 @@ Filter64AudioProcessorEditor::Filter64AudioProcessorEditor(Filter64AudioProcesso
     resetButton.onClick = [this]
     {
         for (int ch = 0; ch < 64; ++ch)
-        {        
+        {
             std::string ch_str = std::to_string(ch+1);
             std::array<std::string, 4> paramIDs{"chtype" + ch_str, "chcutoff" + ch_str, "chresonance" + ch_str, "chdrive" + ch_str};
 
@@ -84,7 +83,7 @@ Filter64AudioProcessorEditor::Filter64AudioProcessorEditor(Filter64AudioProcesso
     addAndMakeVisible(masterTypeLabel);
 
     masterCutoffSlider.setLookAndFeel(&customLookAndFeel);
-    masterCutoffSlider.setColour(juce::Slider::trackColourId, juce::Colour(101, 142, 162));
+    masterCutoffSlider.setColour(juce::Slider::trackColourId, customLookAndFeel.mainMasterSliderColour);
     masterCutoffSlider.setSliderStyle(juce::Slider::LinearBar);
     masterCutoffSlider.setTextBoxStyle(juce::Slider::TextBoxLeft, false, 0, 0);
     masterCutoffSlider.setPopupDisplayEnabled(false, false, this);
@@ -93,7 +92,7 @@ Filter64AudioProcessorEditor::Filter64AudioProcessorEditor(Filter64AudioProcesso
     masterCutoffSlider.setTextValueSuffix(" Hz");
 
     masterResonanceSlider.setLookAndFeel(&customLookAndFeel);
-    masterResonanceSlider.setColour(juce::Slider::trackColourId, juce::Colour(101, 142, 162));
+    masterResonanceSlider.setColour(juce::Slider::trackColourId, customLookAndFeel.otherMasterSliderColour);
     masterResonanceSlider.setSliderStyle(juce::Slider::LinearBar);
     masterResonanceSlider.setTextBoxStyle(juce::Slider::TextBoxLeft, false, 0, 0);
     masterResonanceSlider.setPopupDisplayEnabled(false, false, this);
@@ -102,7 +101,7 @@ Filter64AudioProcessorEditor::Filter64AudioProcessorEditor(Filter64AudioProcesso
     masterResonanceSlider.setTextValueSuffix(" %");
 
     masterDriveSlider.setLookAndFeel(&customLookAndFeel);
-    masterDriveSlider.setColour(juce::Slider::trackColourId, juce::Colour(101, 142, 162));
+    masterDriveSlider.setColour(juce::Slider::trackColourId, customLookAndFeel.otherMasterSliderColour);
     masterDriveSlider.setSliderStyle(juce::Slider::LinearBar);
     masterDriveSlider.setTextBoxStyle(juce::Slider::TextBoxLeft, false, 0, 0);
     masterDriveSlider.setPopupDisplayEnabled(false, false, this);
@@ -114,7 +113,7 @@ Filter64AudioProcessorEditor::Filter64AudioProcessorEditor(Filter64AudioProcesso
     masterFilterBox.setColour(juce::ComboBox::backgroundColourId, juce::Colours::transparentBlack);
     masterFilterBox.setColour(juce::ComboBox::outlineColourId, juce::Colours::transparentBlack);
     masterFilterBox.setScrollWheelEnabled(true);
-    addAndMakeVisible(masterFilterBox); 	
+    addAndMakeVisible(masterFilterBox);
     masterFilterBox.addItem("NONE", 1);
     masterFilterBox.addItem("LPF12", 2);
     masterFilterBox.addItem("HPF12", 3);
@@ -127,7 +126,7 @@ Filter64AudioProcessorEditor::Filter64AudioProcessorEditor(Filter64AudioProcesso
     chLabel.setText("CHAN", juce::dontSendNotification);
     chLabel.setJustificationType(juce::Justification::left);
     addAndMakeVisible(chLabel);
-    
+
     chCutoffLabel.setText("CUT", juce::dontSendNotification);
     chCutoffLabel.setJustificationType(juce::Justification::left);
     addAndMakeVisible(chCutoffLabel);
@@ -166,7 +165,7 @@ Filter64AudioProcessorEditor::Filter64AudioProcessorEditor(Filter64AudioProcesso
         std::string paramID;
 
         chCutoffSliders[i].setLookAndFeel(&customLookAndFeel);
-        chCutoffSliders[i].setColour(juce::Slider::trackColourId, juce::Colour(153, 99, 134));
+        chCutoffSliders[i].setColour(juce::Slider::trackColourId, customLookAndFeel.mainChSliderColour);
         chCutoffSliders[i].setSliderStyle(juce::Slider::LinearBar);
         chCutoffSliders[i].setTextBoxStyle(juce::Slider::TextBoxLeft, false, 0, 0);
         chCutoffSliders[i].setPopupDisplayEnabled(false, false, this);
@@ -176,7 +175,7 @@ Filter64AudioProcessorEditor::Filter64AudioProcessorEditor(Filter64AudioProcesso
         chCutoffSliders[i].setTextValueSuffix(" Hz");
 
         chResonanceSliders[i].setLookAndFeel(&customLookAndFeel);
-        chResonanceSliders[i].setColour(juce::Slider::trackColourId, juce::Colour(153, 99, 134));
+        chResonanceSliders[i].setColour(juce::Slider::trackColourId, customLookAndFeel.otherChSliderColour);
         chResonanceSliders[i].setSliderStyle(juce::Slider::LinearBar);
         chResonanceSliders[i].setTextBoxStyle(juce::Slider::TextBoxLeft, false, 0, 0);
         chResonanceSliders[i].setPopupDisplayEnabled(false, false, this);
@@ -186,7 +185,7 @@ Filter64AudioProcessorEditor::Filter64AudioProcessorEditor(Filter64AudioProcesso
         chResonanceSliders[i].setTextValueSuffix(" %");
 
         chDriveSliders[i].setLookAndFeel(&customLookAndFeel);
-        chDriveSliders[i].setColour(juce::Slider::trackColourId, juce::Colour(153, 99, 134));
+        chDriveSliders[i].setColour(juce::Slider::trackColourId, customLookAndFeel.otherChSliderColour);
         chDriveSliders[i].setSliderStyle(juce::Slider::LinearBar);
         chDriveSliders[i].setTextBoxStyle(juce::Slider::TextBoxLeft, false, 0, 0);
         chDriveSliders[i].setPopupDisplayEnabled(false, false, this);
@@ -199,7 +198,7 @@ Filter64AudioProcessorEditor::Filter64AudioProcessorEditor(Filter64AudioProcesso
         chFilterBoxes[i].setColour(juce::ComboBox::backgroundColourId, juce::Colours::transparentBlack);
         chFilterBoxes[i].setColour(juce::ComboBox::outlineColourId, juce::Colours::transparentBlack);
         chFilterBoxes[i].setScrollWheelEnabled(true);
-        addAndMakeVisible(chFilterBoxes[i]); 	
+        addAndMakeVisible(chFilterBoxes[i]);
         chFilterBoxes[i].addItem("NONE", 1);
         chFilterBoxes[i].addItem("LPF12", 2);
         chFilterBoxes[i].addItem("HPF12", 3);
@@ -218,7 +217,7 @@ Filter64AudioProcessorEditor::~Filter64AudioProcessorEditor()
 
 void Filter64AudioProcessorEditor::paint(juce::Graphics& g)
 {
-    g.fillAll(juce::Colour(44, 48, 52));
+    g.fillAll(customLookAndFeel.backgroundColour);
     resized();
 }
 
@@ -307,7 +306,7 @@ void Filter64AudioProcessorEditor::resized()
             chDriveSliders[c].setBounds(blockUI * 12, blockUI * 8, blockUI * 3, blockUI);
             chDriveSliders[c].setTextBoxStyle(juce::Slider::TextBoxLeft, false, blockUI * 3, blockUI);
 
-            chCutoffSliders[c].setBounds(blockUI * 5, blockUI * 10, blockUI * 10, blockUI);    
+            chCutoffSliders[c].setBounds(blockUI * 5, blockUI * 10, blockUI * 10, blockUI);
             chCutoffSliders[c].setTextBoxStyle(juce::Slider::TextBoxLeft, false, blockUI * 10, blockUI);
         }
         else

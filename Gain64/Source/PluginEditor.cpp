@@ -1,6 +1,6 @@
 /******************************************************************************
 This file is part of Plug64.
-Copyright 2024 Valerio Orlandini <valeriorlandini@gmail.com>.
+Copyright 2024-2025 Valerio Orlandini <valeriorlandini@gmail.com>.
 
 Plug64 is free software: you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
@@ -29,7 +29,6 @@ Gain64AudioProcessorEditor::Gain64AudioProcessorEditor(Gain64AudioProcessor& p)
     getConstrainer()->setFixedAspectRatio(2.0f);
 
     getLookAndFeel().setColour(juce::Label::textColourId, juce::Colours::whitesmoke);
-    getLookAndFeel().setColour(juce::Slider::trackColourId, juce::Colour(101, 142, 162));
     getLookAndFeel().setDefaultSansSerifTypeface(customTypeface);
 
     header.setText("Plug64", juce::dontSendNotification);
@@ -67,7 +66,7 @@ Gain64AudioProcessorEditor::Gain64AudioProcessorEditor(Gain64AudioProcessor& p)
     addAndMakeVisible(masterGainLabel);
 
     masterGainSlider.setLookAndFeel(&customLookAndFeel);
-    masterGainSlider.setColour(juce::Slider::trackColourId, juce::Colour(101, 142, 162));
+    masterGainSlider.setColour(juce::Slider::trackColourId, customLookAndFeel.mainMasterSliderColour);
     masterGainSlider.setSliderStyle(juce::Slider::LinearBar);
     masterGainSlider.setTextBoxStyle(juce::Slider::TextBoxLeft, false, 0, 0);
     masterGainSlider.setPopupDisplayEnabled(false, false, this);
@@ -78,7 +77,7 @@ Gain64AudioProcessorEditor::Gain64AudioProcessorEditor(Gain64AudioProcessor& p)
     chLabel.setText("CHAN", juce::dontSendNotification);
     chLabel.setJustificationType(juce::Justification::left);
     addAndMakeVisible(chLabel);
-    
+
     chGainLabel.setText("GAIN", juce::dontSendNotification);
     chGainLabel.setJustificationType(juce::Justification::left);
     addAndMakeVisible(chGainLabel);
@@ -102,7 +101,7 @@ Gain64AudioProcessorEditor::Gain64AudioProcessorEditor(Gain64AudioProcessor& p)
     for (unsigned int i = 0; i < 64; i++)
     {
         chGainSliders[i].setLookAndFeel(&customLookAndFeel);
-        chGainSliders[i].setColour(juce::Slider::trackColourId, juce::Colour(153, 99, 134));
+        chGainSliders[i].setColour(juce::Slider::trackColourId, customLookAndFeel.mainChSliderColour);
         chGainSliders[i].setSliderStyle(juce::Slider::LinearBar);
         chGainSliders[i].setTextBoxStyle(juce::Slider::TextBoxLeft, false, 0, 0);
         chGainSliders[i].setPopupDisplayEnabled(false, false, this);
@@ -119,7 +118,7 @@ Gain64AudioProcessorEditor::~Gain64AudioProcessorEditor()
 
 void Gain64AudioProcessorEditor::paint(juce::Graphics& g)
 {
-    g.fillAll(juce::Colour(44, 48, 52));
+    g.fillAll(customLookAndFeel.backgroundColour);
     resized();
 }
 
@@ -168,7 +167,7 @@ void Gain64AudioProcessorEditor::resized()
     {
         if ((unsigned int)(selectChBox.getSelectedId()) - 1 == c)
         {
-            chGainSliders[c].setBounds(blockUI * 5, blockUI * 6, blockUI * 10, blockUI);    
+            chGainSliders[c].setBounds(blockUI * 5, blockUI * 6, blockUI * 10, blockUI);
             chGainSliders[c].setTextBoxStyle(juce::Slider::TextBoxLeft, false, blockUI * 10, blockUI);
         }
         else

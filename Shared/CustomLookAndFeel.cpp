@@ -1,6 +1,6 @@
 /******************************************************************************
 This file is part of Plug64.
-Copyright 2024 Valerio Orlandini <valeriorlandini@gmail.com>.
+Copyright 2024-2025 Valerio Orlandini <valeriorlandini@gmail.com>.
 
 Plug64 is free software: you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
@@ -67,7 +67,7 @@ juce::Path CustomLookAndFeel::getTickShape(float)
 }
 
 void CustomLookAndFeel::drawComboBox(juce::Graphics& g, int width, int height, bool,
-                  int, int, int, int, juce::ComboBox& box)
+                                     int, int, int, int, juce::ComboBox& box)
 {
     auto cornerSize = box.findParentComponentOfClass<juce::ChoicePropertyComponent>() != nullptr ? 0.0f : 3.0f;
     juce::Rectangle<int> boxBounds(0, 0, width, height);

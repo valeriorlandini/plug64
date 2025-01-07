@@ -1,6 +1,6 @@
 /******************************************************************************
 This file is part of Plug64.
-Copyright 2024 Valerio Orlandini <valeriorlandini@gmail.com>.
+Copyright 2024-2025 Valerio Orlandini <valeriorlandini@gmail.com>.
 
 Plug64 is free software: you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
@@ -17,7 +17,12 @@ Plug64. If not, see <https://www.gnu.org/licenses/>.
 
 #pragma once
 
-#include "PluginProcessor.h"
+#include <juce_core/juce_core.h>
+#include <juce_data_structures/juce_data_structures.h>
+#include <juce_graphics/juce_graphics.h>
+#include <juce_gui_basics/juce_gui_basics.h>
+#include <juce_gui_extra/juce_gui_extra.h>
+#include "BinaryData.h"
 
 class CustomLookAndFeel : public juce::LookAndFeel_V4
 {
@@ -27,7 +32,7 @@ public:
 
     juce::Label* createSliderTextBox(juce::Slider& slider) override;
     juce::Font getComboBoxFont(juce::ComboBox& box) override;
-    juce::Font getPopupMenuFont() override;   
+    juce::Font getPopupMenuFont() override;
     void drawPopupMenuBackground(juce::Graphics& g, int, int) override;
     juce::Path getTickShape(float) override;
     void drawPopupMenuUpDownArrow(juce::Graphics&, int, int, bool) override {}
@@ -37,8 +42,14 @@ public:
     juce::PopupMenu::Options getOptionsForComboBoxPopupMenu(juce::ComboBox& box, juce::Label&) override;
     juce::Font customFont;
 
+    const juce::Colour backgroundColour = juce::Colour(44, 48, 52);
+    const juce::Colour mainMasterSliderColour = juce::Colour(149, 217, 218);
+    const juce::Colour otherMasterSliderColour = juce::Colour(109, 214, 218);
+    const juce::Colour mainChSliderColour = juce::Colour(174, 140, 173);
+    const juce::Colour otherChSliderColour = juce::Colour(162, 171, 181);
+
 private:
     float comboFontSize = 0.0f;
-    
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CustomLookAndFeel)
 };
