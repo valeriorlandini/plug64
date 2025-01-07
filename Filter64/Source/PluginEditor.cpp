@@ -218,12 +218,14 @@ Filter64AudioProcessorEditor::~Filter64AudioProcessorEditor()
 void Filter64AudioProcessorEditor::paint(juce::Graphics& g)
 {
     g.fillAll(customLookAndFeel.backgroundColour);
-    resized();
+    g.setColour(juce::Colours::whitesmoke);
+    auto width = static_cast<float>(getWidth());
+    g.drawLine(width * 0.0625f, width * 0.2f, width * 0.9375f, width * 0.2f, width * 0.004f);
 }
 
 void Filter64AudioProcessorEditor::resized()
 {
-    const int blockUI = (int)ceil(getWidth() / 16.0f);
+    const int blockUI = (int)ceil((float)getWidth() / 16.0f);
     fontSize = (float)blockUI * 0.75f;
     customFont = customFont.withHeight(fontSize);
 

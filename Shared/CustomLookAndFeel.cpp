@@ -31,7 +31,7 @@ juce::Label* CustomLookAndFeel::createSliderTextBox(juce::Slider& slider)
     auto* label = new juce::Label();
     label->setJustificationType(juce::Justification::centred);
 
-    float fontSize = slider.getHeight() * 0.75f;
+    float fontSize = (float)(slider.getHeight()) * 0.75f;
     label->setFont(customFont.withHeight(fontSize));
 
     label->setColour(juce::Label::textColourId, juce::Colours::whitesmoke);
@@ -44,7 +44,7 @@ juce::Label* CustomLookAndFeel::createSliderTextBox(juce::Slider& slider)
 
 juce::Font CustomLookAndFeel::getComboBoxFont(juce::ComboBox& box)
 {
-    comboFontSize = box.getHeight() * 0.75f;
+    comboFontSize = (float)(box.getHeight()) * 0.75f;
 
     return customFont.withHeight(comboFontSize);
 }

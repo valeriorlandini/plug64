@@ -76,5 +76,5 @@ public:
 private:
     std::array<juce::dsp::ProcessorChain<juce::dsp::Gain<float>, juce::dsp::Gain<float>>, 64> processorChains;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Gain64AudioProcessor);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Gain64AudioProcessor)
 };

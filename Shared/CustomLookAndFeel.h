@@ -43,10 +43,10 @@ public:
     juce::Font customFont;
 
     const juce::Colour backgroundColour = juce::Colour(44, 48, 52);
-    const juce::Colour mainMasterSliderColour = juce::Colour(149, 217, 218);
-    const juce::Colour otherMasterSliderColour = juce::Colour(109, 214, 218);
+    const juce::Colour mainMasterSliderColour = juce::Colour(66, 90, 166);
+    const juce::Colour otherMasterSliderColour = juce::Colour(145, 164, 228);
     const juce::Colour mainChSliderColour = juce::Colour(174, 140, 173);
-    const juce::Colour otherChSliderColour = juce::Colour(162, 171, 181);
+    const juce::Colour otherChSliderColour = juce::Colour(110, 82, 109);
 
 private:
     float comboFontSize = 0.0f;

@@ -36,6 +36,7 @@ private:
     juce::Label title;
     juce::Label resetLabel;
     juce::ShapeButton resetButton{"reset", juce::Colour(243, 255, 148), juce::Colour(243, 255, 148), juce::Colour(214, 108, 87)};
+    juce::Line<int> headerLine;
     juce::Label masterLabel;
     juce::Label masterTypeLabel;
     juce::Label masterResonanceLabel;
