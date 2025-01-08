@@ -44,8 +44,8 @@ private:
     juce::Label chGainLabel;
     juce::ComboBox selectChBox;
     juce::Slider selectChSlider;
-    std::array<juce::Slider, 64> chGainSliders;
-    std::array<std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment>, 64> chGainAttachments;
+    std::array<juce::Slider, MAX_CHANS> chGainSliders;
+    std::array<std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment>, MAX_CHANS> chGainAttachments;
 
     juce::Typeface::Ptr customTypeface;
     juce::Font customFont;

@@ -32,6 +32,10 @@ endif ()
 # Static linking in Windows
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
+# Maximum supported channels
+option(MAX_CHANS "Maximum number of channels" 64)
+add_compile_definitions(MAX_CHANS=${MAX_CHANS})
+
 # Require libraries
 find_package(juce REQUIRED)
 

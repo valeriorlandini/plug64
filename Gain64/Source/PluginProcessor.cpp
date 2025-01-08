@@ -36,10 +36,10 @@ Gain64AudioProcessor::Gain64AudioProcessor() :
 
     layout.add(std::make_unique<juce::AudioParameterFloat>("mastergain", "Master Gain", juce::NormalisableRange<float>(-70.0f, 12.0f, 0.01f, 3.0f, false), 0.0f));
 
-    for (unsigned int i = 0; i < 64; i++)
+    for (unsigned int ch = 0; ch < MAX_CHANS; ++ch)
     {
-        auto parameterID = "chgain" + std::to_string(i+1);
-        auto parameterName = "Channel " + std::to_string(i+1) + " Gain";
+        auto parameterID = "chgain" + std::to_string(ch+1);
+        auto parameterName = "Channel " + std::to_string(ch+1) + " Gain";
         layout.add(std::make_unique<juce::AudioParameterFloat>(parameterID, parameterName, juce::NormalisableRange<float>(-70.0f, 12.0f, 0.01f, 3.0f, false), 0.0f));
     }
 
@@ -55,7 +55,7 @@ Gain64AudioProcessor::Gain64AudioProcessor() :
 
     masterGainParameter = treeState.getRawParameterValue("mastergain");
 
-    for (unsigned int ch = 0; ch < 64; ++ch)
+    for (unsigned int ch = 0; ch < MAX_CHANS; ++ch)
     {
         chGainParameters.at(ch) = treeState.getRawParameterValue("chgain" + std::to_string(ch+1));
         processorChains.at(ch).get<0>().setRampDurationSeconds(0.05);
@@ -135,7 +135,7 @@ void Gain64AudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
     juce::dsp::ProcessSpec spec{sampleRate, (juce::uint32)samplesPerBlock, 1};
 
-    for (unsigned int ch = 0; ch < (unsigned int)std::min(getTotalNumInputChannels(), 64); ch++)
+    for (unsigned int ch = 0; ch < (unsigned int)std::min(getTotalNumInputChannels(), MAX_CHANS); ++ch)
     {
         processorChains.at(ch).prepare(spec);
         processorChains.at(ch).get<0>().setGainDecibels(*(chGainParameters.at(ch)));
@@ -177,7 +177,7 @@ void Gain64AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::
 
     for (unsigned int ch = 0; ch < (unsigned int)totalNumInputChannels; ++ch)
     {
-        if (ch < 64)
+        if (ch < MAX_CHANS)
         {
             processorChains.at(ch).get<0>().setGainDecibels(*(chGainParameters.at(ch)));
             processorChains.at(ch).get<1>().setGainDecibels(*masterGainParameter);

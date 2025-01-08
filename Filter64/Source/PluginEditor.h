@@ -57,14 +57,14 @@ private:
     juce::Label chResonanceLabel;
     juce::ComboBox selectChBox;
     juce::Slider selectChSlider;
-    std::array<juce::Slider, 64> chCutoffSliders;
-    std::array<juce::Slider, 64> chResonanceSliders;
-    std::array<juce::Slider, 64> chDriveSliders;
-    std::array<juce::ComboBox, 64> chFilterBoxes;
-    std::array<std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment>, 64> chFilterAttachments;
-    std::array<std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment>, 64> chCutoffAttachments;
-    std::array<std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment>, 64> chResonanceAttachments;
-    std::array<std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment>, 64> chDriveAttachments;
+    std::array<juce::Slider, MAX_CHANS> chCutoffSliders;
+    std::array<juce::Slider, MAX_CHANS> chResonanceSliders;
+    std::array<juce::Slider, MAX_CHANS> chDriveSliders;
+    std::array<juce::ComboBox, MAX_CHANS> chFilterBoxes;
+    std::array<std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment>, MAX_CHANS> chFilterAttachments;
+    std::array<std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment>, MAX_CHANS> chCutoffAttachments;
+    std::array<std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment>, MAX_CHANS> chResonanceAttachments;
+    std::array<std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment>, MAX_CHANS> chDriveAttachments;
 
     juce::Typeface::Ptr customTypeface;
     juce::Font customFont;

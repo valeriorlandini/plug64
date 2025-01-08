@@ -40,9 +40,9 @@ Filter64AudioProcessor::Filter64AudioProcessor() :
     layout.add(std::make_unique<juce::AudioParameterFloat>("masterresonance", "Master Resonance", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 5.0f));
     layout.add(std::make_unique<juce::AudioParameterFloat>("masterdrive", "Master Drive", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f));
 
-    for (unsigned int i = 0; i < 64; i++)
+    for (unsigned int ch = 0; ch < MAX_CHANS; ++ch)
     {
-        std::string ch_str = std::to_string(i+1);
+        std::string ch_str = std::to_string(ch+1);
         std::string parameterID, parameterName;
 
         parameterID = "chtype" + ch_str;
@@ -77,7 +77,7 @@ Filter64AudioProcessor::Filter64AudioProcessor() :
     masterResonanceParameter = treeState.getRawParameterValue("masterresonance");
     masterDriveParameter = treeState.getRawParameterValue("masterdrive");
 
-    for (unsigned int ch = 0; ch < 64; ++ch)
+    for (unsigned int ch = 0; ch < MAX_CHANS; ++ch)
     {
         std::string ch_str = std::to_string(ch+1);
         chTypeParameters.at(ch) = treeState.getRawParameterValue("chtype" + ch_str);
@@ -159,7 +159,7 @@ void Filter64AudioProcessor::prepareToPlay(double sampleRate, int samplesPerBloc
 {
     juce::dsp::ProcessSpec spec{sampleRate, (juce::uint32)samplesPerBlock, 1};
 
-    for (unsigned int ch = 0; ch < (unsigned int)std::min(getTotalNumInputChannels(), 64); ch++)
+    for (unsigned int ch = 0; ch < (unsigned int)std::min(getTotalNumInputChannels(), MAX_CHANS); ++ch)
     {
         processorChains.at(ch).prepare(spec);
 
@@ -201,7 +201,7 @@ void Filter64AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 
     for (unsigned int ch = 0; ch < (unsigned int)totalNumInputChannels; ++ch)
     {
-        if (ch < 64)
+        if (ch < MAX_CHANS)
         {
             updateParams();
             auto channelBlock = block.getSingleChannelBlock(ch);

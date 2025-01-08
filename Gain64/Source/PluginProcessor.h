@@ -68,13 +68,13 @@ public:
 
     juce::AudioProcessorValueTreeState treeState;
 
-    std::array<std::atomic<float>*, 64> chGainParameters = {nullptr};
+    std::array<std::atomic<float>*, MAX_CHANS> chGainParameters = {nullptr};
     std::atomic<float>* masterGainParameter = nullptr;
 
     juce::Value selChannel;
 
 private:
-    std::array<juce::dsp::ProcessorChain<juce::dsp::Gain<float>, juce::dsp::Gain<float>>, 64> processorChains;
+    std::array<juce::dsp::ProcessorChain<juce::dsp::Gain<float>, juce::dsp::Gain<float>>, MAX_CHANS> processorChains;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Gain64AudioProcessor)
 };

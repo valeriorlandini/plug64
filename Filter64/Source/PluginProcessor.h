@@ -68,10 +68,10 @@ public:
 
     juce::AudioProcessorValueTreeState treeState;
 
-    std::array<std::atomic<float>*, 64> chTypeParameters = {nullptr};
-    std::array<std::atomic<float>*, 64> chCutoffParameters = {nullptr};
-    std::array<std::atomic<float>*, 64> chResonanceParameters = {nullptr};
-    std::array<std::atomic<float>*, 64> chDriveParameters = {nullptr};
+    std::array<std::atomic<float>*, MAX_CHANS> chTypeParameters = {nullptr};
+    std::array<std::atomic<float>*, MAX_CHANS> chCutoffParameters = {nullptr};
+    std::array<std::atomic<float>*, MAX_CHANS> chResonanceParameters = {nullptr};
+    std::array<std::atomic<float>*, MAX_CHANS> chDriveParameters = {nullptr};
     std::atomic<float>* masterTypeParameter = nullptr;
     std::atomic<float>* masterCutoffParameter = nullptr;
     std::atomic<float>* masterResonanceParameter = nullptr;
@@ -80,11 +80,11 @@ public:
     juce::Value selChannel;
 
 private:
-    std::array<juce::dsp::ProcessorChain<juce::dsp::LadderFilter<float>, juce::dsp::LadderFilter<float>>, 64> processorChains;
+    std::array<juce::dsp::ProcessorChain<juce::dsp::LadderFilter<float>, juce::dsp::LadderFilter<float>>, MAX_CHANS> processorChains;
 
     inline void updateParams()
     {
-        for (unsigned int ch = 0; ch < 64; ++ch)
+        for (unsigned int ch = 0; ch < MAX_CHANS; ++ch)
         {
             processorChains.at(ch).get<0>().setCutoffFrequencyHz(*(chCutoffParameters.at(ch)));
             processorChains.at(ch).get<0>().setResonance(*(chResonanceParameters.at(ch)) * 0.01f);

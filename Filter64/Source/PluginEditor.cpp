@@ -28,7 +28,7 @@ Filter64AudioProcessorEditor::Filter64AudioProcessorEditor(Filter64AudioProcesso
     setResizable(true, p.wrapperType != Filter64AudioProcessor::wrapperType_AudioUnitv3);
     getConstrainer()->setFixedAspectRatio(4.0f/3.0f);
 
-    getLookAndFeel().setColour(juce::Label::textColourId, juce::Colours::whitesmoke);
+    getLookAndFeel().setColour(juce::Label::textColourId, customLookAndFeel.textColour);
     getLookAndFeel().setDefaultSansSerifTypeface(customTypeface);
 
     header.setText("Plug64", juce::dontSendNotification);
@@ -45,7 +45,7 @@ Filter64AudioProcessorEditor::Filter64AudioProcessorEditor(Filter64AudioProcesso
     addAndMakeVisible(resetButton);
     resetButton.onClick = [this]
     {
-        for (int ch = 0; ch < 64; ++ch)
+        for (int ch = 0; ch < MAX_CHANS; ++ch)
         {
             std::string ch_str = std::to_string(ch+1);
             std::array<std::string, 4> paramIDs{"chtype" + ch_str, "chcutoff" + ch_str, "chresonance" + ch_str, "chdrive" + ch_str};
@@ -148,7 +148,7 @@ Filter64AudioProcessorEditor::Filter64AudioProcessorEditor(Filter64AudioProcesso
     selectChBox.setColour(juce::ComboBox::outlineColourId, juce::Colours::transparentBlack);
     selectChBox.setScrollWheelEnabled(true);
     addAndMakeVisible(selectChBox);
-    for (auto ch = 1; ch <= 64; ch++)
+    for (auto ch = 1; ch <= MAX_CHANS; ++ch)
     {
         selectChBox.addItem(std::to_string(ch), ch);
     }
@@ -159,55 +159,55 @@ Filter64AudioProcessorEditor::Filter64AudioProcessorEditor(Filter64AudioProcesso
     };
     selectChBox.setSelectedId(int(audioProcessor.selChannel.getValue()) != 0 ? int(audioProcessor.selChannel.getValue()) : 1);
 
-    for (unsigned int i = 0; i < 64; i++)
+    for (unsigned int ch = 0; ch < MAX_CHANS; ++ch)
     {
-        std::string ch_str = std::to_string(i+1);
+        std::string ch_str = std::to_string(ch+1);
         std::string paramID;
 
-        chCutoffSliders[i].setLookAndFeel(&customLookAndFeel);
-        chCutoffSliders[i].setColour(juce::Slider::trackColourId, customLookAndFeel.mainChSliderColour);
-        chCutoffSliders[i].setSliderStyle(juce::Slider::LinearBar);
-        chCutoffSliders[i].setTextBoxStyle(juce::Slider::TextBoxLeft, false, 0, 0);
-        chCutoffSliders[i].setPopupDisplayEnabled(false, false, this);
-        addAndMakeVisible(chCutoffSliders[i]);
+        chCutoffSliders[ch].setLookAndFeel(&customLookAndFeel);
+        chCutoffSliders[ch].setColour(juce::Slider::trackColourId, customLookAndFeel.mainChSliderColour);
+        chCutoffSliders[ch].setSliderStyle(juce::Slider::LinearBar);
+        chCutoffSliders[ch].setTextBoxStyle(juce::Slider::TextBoxLeft, false, 0, 0);
+        chCutoffSliders[ch].setPopupDisplayEnabled(false, false, this);
+        addAndMakeVisible(chCutoffSliders[ch]);
         paramID = "chcutoff" + ch_str;
-        chCutoffAttachments[i] = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(p.treeState, paramID, chCutoffSliders[i]);
-        chCutoffSliders[i].setTextValueSuffix(" Hz");
+        chCutoffAttachments[ch] = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(p.treeState, paramID, chCutoffSliders[ch]);
+        chCutoffSliders[ch].setTextValueSuffix(" Hz");
 
-        chResonanceSliders[i].setLookAndFeel(&customLookAndFeel);
-        chResonanceSliders[i].setColour(juce::Slider::trackColourId, customLookAndFeel.otherChSliderColour);
-        chResonanceSliders[i].setSliderStyle(juce::Slider::LinearBar);
-        chResonanceSliders[i].setTextBoxStyle(juce::Slider::TextBoxLeft, false, 0, 0);
-        chResonanceSliders[i].setPopupDisplayEnabled(false, false, this);
-        addAndMakeVisible(chResonanceSliders[i]);
+        chResonanceSliders[ch].setLookAndFeel(&customLookAndFeel);
+        chResonanceSliders[ch].setColour(juce::Slider::trackColourId, customLookAndFeel.otherChSliderColour);
+        chResonanceSliders[ch].setSliderStyle(juce::Slider::LinearBar);
+        chResonanceSliders[ch].setTextBoxStyle(juce::Slider::TextBoxLeft, false, 0, 0);
+        chResonanceSliders[ch].setPopupDisplayEnabled(false, false, this);
+        addAndMakeVisible(chResonanceSliders[ch]);
         paramID = "chresonance" + ch_str;
-        chResonanceAttachments[i] = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(p.treeState, paramID, chResonanceSliders[i]);
-        chResonanceSliders[i].setTextValueSuffix(" %");
+        chResonanceAttachments[ch] = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(p.treeState, paramID, chResonanceSliders[ch]);
+        chResonanceSliders[ch].setTextValueSuffix(" %");
 
-        chDriveSliders[i].setLookAndFeel(&customLookAndFeel);
-        chDriveSliders[i].setColour(juce::Slider::trackColourId, customLookAndFeel.otherChSliderColour);
-        chDriveSliders[i].setSliderStyle(juce::Slider::LinearBar);
-        chDriveSliders[i].setTextBoxStyle(juce::Slider::TextBoxLeft, false, 0, 0);
-        chDriveSliders[i].setPopupDisplayEnabled(false, false, this);
-        addAndMakeVisible(chDriveSliders[i]);
+        chDriveSliders[ch].setLookAndFeel(&customLookAndFeel);
+        chDriveSliders[ch].setColour(juce::Slider::trackColourId, customLookAndFeel.otherChSliderColour);
+        chDriveSliders[ch].setSliderStyle(juce::Slider::LinearBar);
+        chDriveSliders[ch].setTextBoxStyle(juce::Slider::TextBoxLeft, false, 0, 0);
+        chDriveSliders[ch].setPopupDisplayEnabled(false, false, this);
+        addAndMakeVisible(chDriveSliders[ch]);
         paramID = "chdrive" + ch_str;
-        chDriveAttachments[i] = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(p.treeState, paramID, chDriveSliders[i]);
-        chDriveSliders[i].setTextValueSuffix(" %");
+        chDriveAttachments[ch] = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(p.treeState, paramID, chDriveSliders[ch]);
+        chDriveSliders[ch].setTextValueSuffix(" %");
 
-        chFilterBoxes[i].setLookAndFeel(&customLookAndFeel);
-        chFilterBoxes[i].setColour(juce::ComboBox::backgroundColourId, juce::Colours::transparentBlack);
-        chFilterBoxes[i].setColour(juce::ComboBox::outlineColourId, juce::Colours::transparentBlack);
-        chFilterBoxes[i].setScrollWheelEnabled(true);
-        addAndMakeVisible(chFilterBoxes[i]);
-        chFilterBoxes[i].addItem("NONE", 1);
-        chFilterBoxes[i].addItem("LPF12", 2);
-        chFilterBoxes[i].addItem("HPF12", 3);
-        chFilterBoxes[i].addItem("BPF12", 4);
-        chFilterBoxes[i].addItem("LPF24", 5);
-        chFilterBoxes[i].addItem("HPF24", 6);
-        chFilterBoxes[i].addItem("BPF24", 7);
+        chFilterBoxes[ch].setLookAndFeel(&customLookAndFeel);
+        chFilterBoxes[ch].setColour(juce::ComboBox::backgroundColourId, juce::Colours::transparentBlack);
+        chFilterBoxes[ch].setColour(juce::ComboBox::outlineColourId, juce::Colours::transparentBlack);
+        chFilterBoxes[ch].setScrollWheelEnabled(true);
+        addAndMakeVisible(chFilterBoxes[ch]);
+        chFilterBoxes[ch].addItem("NONE", 1);
+        chFilterBoxes[ch].addItem("LPF12", 2);
+        chFilterBoxes[ch].addItem("HPF12", 3);
+        chFilterBoxes[ch].addItem("BPF12", 4);
+        chFilterBoxes[ch].addItem("LPF24", 5);
+        chFilterBoxes[ch].addItem("HPF24", 6);
+        chFilterBoxes[ch].addItem("BPF24", 7);
         paramID = "chtype" + ch_str;
-        chFilterAttachments[i] = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(p.treeState, paramID, chFilterBoxes[i]);
+        chFilterAttachments[ch] = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(p.treeState, paramID, chFilterBoxes[ch]);
     }
 }
 
@@ -218,9 +218,9 @@ Filter64AudioProcessorEditor::~Filter64AudioProcessorEditor()
 void Filter64AudioProcessorEditor::paint(juce::Graphics& g)
 {
     g.fillAll(customLookAndFeel.backgroundColour);
-    g.setColour(juce::Colours::whitesmoke);
+    g.setColour(customLookAndFeel.lineColour);
     auto width = static_cast<float>(getWidth());
-    g.drawLine(width * 0.0625f, width * 0.2f, width * 0.9375f, width * 0.2f, width * 0.004f);
+    g.drawLine(width * 0.05f, width * 0.2f, width * 0.95f, width * 0.2f, width * 0.004f);
 }
 
 void Filter64AudioProcessorEditor::resized()
@@ -296,27 +296,27 @@ void Filter64AudioProcessorEditor::resized()
 
     selectChBox.setBounds((int)((float)blockUI * 2.5f), blockUI * 8, (int)((float)blockUI * 1.5f), blockUI);
 
-    for (unsigned int c = 0; c < 64; c++)
+    for (unsigned int ch = 0; ch < MAX_CHANS; ++ch)
     {
-        if ((unsigned int)(selectChBox.getSelectedId()) - 1 == c)
+        if ((unsigned int)(selectChBox.getSelectedId()) - 1 == ch)
         {
-            chFilterBoxes[c].setBounds(blockUI * 5, blockUI * 8, blockUI * 3, blockUI);
+            chFilterBoxes[ch].setBounds(blockUI * 5, blockUI * 8, blockUI * 3, blockUI);
 
-            chResonanceSliders[c].setBounds((int)((float)blockUI * 8.5f), blockUI * 8, blockUI * 3, blockUI);
-            chResonanceSliders[c].setTextBoxStyle(juce::Slider::TextBoxLeft, false, blockUI * 3, blockUI);
+            chResonanceSliders[ch].setBounds((int)((float)blockUI * 8.5f), blockUI * 8, blockUI * 3, blockUI);
+            chResonanceSliders[ch].setTextBoxStyle(juce::Slider::TextBoxLeft, false, blockUI * 3, blockUI);
 
-            chDriveSliders[c].setBounds(blockUI * 12, blockUI * 8, blockUI * 3, blockUI);
-            chDriveSliders[c].setTextBoxStyle(juce::Slider::TextBoxLeft, false, blockUI * 3, blockUI);
+            chDriveSliders[ch].setBounds(blockUI * 12, blockUI * 8, blockUI * 3, blockUI);
+            chDriveSliders[ch].setTextBoxStyle(juce::Slider::TextBoxLeft, false, blockUI * 3, blockUI);
 
-            chCutoffSliders[c].setBounds(blockUI * 5, blockUI * 10, blockUI * 10, blockUI);
-            chCutoffSliders[c].setTextBoxStyle(juce::Slider::TextBoxLeft, false, blockUI * 10, blockUI);
+            chCutoffSliders[ch].setBounds(blockUI * 5, blockUI * 10, blockUI * 10, blockUI);
+            chCutoffSliders[ch].setTextBoxStyle(juce::Slider::TextBoxLeft, false, blockUI * 10, blockUI);
         }
         else
         {
-            chFilterBoxes[c].setBounds(0, 0, 0, 0);
-            chCutoffSliders[c].setBounds(0, 0, 0, 0);
-            chResonanceSliders[c].setBounds(0, 0, 0, 0);
-            chDriveSliders[c].setBounds(0, 0, 0, 0);
+            chFilterBoxes[ch].setBounds(0, 0, 0, 0);
+            chCutoffSliders[ch].setBounds(0, 0, 0, 0);
+            chResonanceSliders[ch].setBounds(0, 0, 0, 0);
+            chDriveSliders[ch].setBounds(0, 0, 0, 0);
         }
     }
 }

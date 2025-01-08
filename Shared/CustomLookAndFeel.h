@@ -42,7 +42,9 @@ public:
     juce::PopupMenu::Options getOptionsForComboBoxPopupMenu(juce::ComboBox& box, juce::Label&) override;
     juce::Font customFont;
 
+    const juce::Colour textColour = juce::Colours::whitesmoke;
     const juce::Colour backgroundColour = juce::Colour(44, 48, 52);
+    const juce::Colour lineColour = juce::Colour(224, 224, 224);
     const juce::Colour mainMasterSliderColour = juce::Colour(66, 90, 166);
     const juce::Colour mainChSliderColour = juce::Colour(145, 164, 228);
     const juce::Colour otherMasterSliderColour = juce::Colour(110, 82, 109);

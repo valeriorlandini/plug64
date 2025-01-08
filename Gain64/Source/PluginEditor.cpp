@@ -28,7 +28,7 @@ Gain64AudioProcessorEditor::Gain64AudioProcessorEditor(Gain64AudioProcessor& p)
     setResizable(true, p.wrapperType != Gain64AudioProcessor::wrapperType_AudioUnitv3);
     getConstrainer()->setFixedAspectRatio(2.0f);
 
-    getLookAndFeel().setColour(juce::Label::textColourId, juce::Colours::whitesmoke);
+    getLookAndFeel().setColour(juce::Label::textColourId, customLookAndFeel.textColour);
     getLookAndFeel().setDefaultSansSerifTypeface(customTypeface);
 
     header.setText("Plug64", juce::dontSendNotification);
@@ -45,7 +45,7 @@ Gain64AudioProcessorEditor::Gain64AudioProcessorEditor(Gain64AudioProcessor& p)
     addAndMakeVisible(resetButton);
     resetButton.onClick = [this]
     {
-        for (int ch = 0; ch < 64; ++ch)
+        for (int ch = 0; ch < MAX_CHANS; ++ch)
         {
             auto paramID = "chgain" + std::to_string(ch+1);
             if (auto* param = audioProcessor.treeState.getParameter(paramID))
@@ -87,7 +87,7 @@ Gain64AudioProcessorEditor::Gain64AudioProcessorEditor(Gain64AudioProcessor& p)
     selectChBox.setColour(juce::ComboBox::outlineColourId, juce::Colours::transparentBlack);
     selectChBox.setScrollWheelEnabled(true);
     addAndMakeVisible(selectChBox);
-    for (auto ch = 1; ch <= 64; ch++)
+    for (auto ch = 1; ch <= MAX_CHANS; ++ch)
     {
         selectChBox.addItem(std::to_string(ch), ch);
     }
@@ -98,17 +98,17 @@ Gain64AudioProcessorEditor::Gain64AudioProcessorEditor(Gain64AudioProcessor& p)
     };
     selectChBox.setSelectedId(int(audioProcessor.selChannel.getValue()) != 0 ? int(audioProcessor.selChannel.getValue()) : 1);
 
-    for (unsigned int i = 0; i < 64; i++)
+    for (unsigned int ch = 0; ch < MAX_CHANS; ++ch)
     {
-        chGainSliders[i].setLookAndFeel(&customLookAndFeel);
-        chGainSliders[i].setColour(juce::Slider::trackColourId, customLookAndFeel.mainChSliderColour);
-        chGainSliders[i].setSliderStyle(juce::Slider::LinearBar);
-        chGainSliders[i].setTextBoxStyle(juce::Slider::TextBoxLeft, false, 0, 0);
-        chGainSliders[i].setPopupDisplayEnabled(false, false, this);
-        addAndMakeVisible(chGainSliders[i]);
-        auto paramID = "chgain" + std::to_string(i+1);
-        chGainAttachments[i] = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(p.treeState, paramID, chGainSliders[i]);
-        chGainSliders[i].setTextValueSuffix(" dB");
+        chGainSliders[ch].setLookAndFeel(&customLookAndFeel);
+        chGainSliders[ch].setColour(juce::Slider::trackColourId, customLookAndFeel.mainChSliderColour);
+        chGainSliders[ch].setSliderStyle(juce::Slider::LinearBar);
+        chGainSliders[ch].setTextBoxStyle(juce::Slider::TextBoxLeft, false, 0, 0);
+        chGainSliders[ch].setPopupDisplayEnabled(false, false, this);
+        addAndMakeVisible(chGainSliders[ch]);
+        auto paramID = "chgain" + std::to_string(ch+1);
+        chGainAttachments[ch] = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(p.treeState, paramID, chGainSliders[ch]);
+        chGainSliders[ch].setTextValueSuffix(" dB");
     }
 }
 
@@ -119,9 +119,9 @@ Gain64AudioProcessorEditor::~Gain64AudioProcessorEditor()
 void Gain64AudioProcessorEditor::paint(juce::Graphics& g)
 {
     g.fillAll(customLookAndFeel.backgroundColour);
-    g.setColour(juce::Colours::whitesmoke);
+    g.setColour(customLookAndFeel.lineColour);
     auto width = static_cast<float>(getWidth());
-    g.drawLine(width * 0.0625f, width * 0.2f, width * 0.9375f, width * 0.2f, width * 0.004f);
+    g.drawLine(width * 0.05f, width * 0.2f, width * 0.95f, width * 0.2f, width * 0.004f);
 }
 
 void Gain64AudioProcessorEditor::resized()
@@ -165,16 +165,16 @@ void Gain64AudioProcessorEditor::resized()
 
     selectChBox.setBounds((int)((float)blockUI * 2.5f), blockUI * 6, (int)((float)blockUI * 1.5f), blockUI);
 
-    for (unsigned int c = 0; c < 64; c++)
+    for (unsigned int ch = 0; ch < MAX_CHANS; ++ch)
     {
-        if ((unsigned int)(selectChBox.getSelectedId()) - 1 == c)
+        if ((unsigned int)(selectChBox.getSelectedId()) - 1 == ch)
         {
-            chGainSliders[c].setBounds(blockUI * 5, blockUI * 6, blockUI * 10, blockUI);
-            chGainSliders[c].setTextBoxStyle(juce::Slider::TextBoxLeft, false, blockUI * 10, blockUI);
+            chGainSliders[ch].setBounds(blockUI * 5, blockUI * 6, blockUI * 10, blockUI);
+            chGainSliders[ch].setTextBoxStyle(juce::Slider::TextBoxLeft, false, blockUI * 10, blockUI);
         }
         else
         {
-            chGainSliders[c].setBounds(0, 0, 0, 0);
+            chGainSliders[ch].setBounds(0, 0, 0, 0);
         }
     }
 }
