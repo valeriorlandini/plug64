@@ -13,7 +13,7 @@ juce_add_plugin("${BaseTargetName}"
         COPY_PLUGIN_AFTER_BUILD FALSE
         PLUGIN_MANUFACTURER_CODE Vorl
         PLUGIN_CODE Ga64
-        FORMATS AU VST3 LV2
+        FORMATS AU VST3 LV2 Standalone
         PRODUCT_NAME "${PluginName}"
 	BUNDLE_ID "com.valeriorlandini.gain64"
 	LV2URI "http://www.valeriorlandini.com/plugins/gain64")
