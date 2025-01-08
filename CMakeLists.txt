@@ -33,7 +33,7 @@ endif ()
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 # Maximum supported channels
-option(MAX_CHANS "Maximum number of channels" 64)
+set(MAX_CHANS 64 CACHE STRING "Maximum number of channels")
 add_compile_definitions(MAX_CHANS=${MAX_CHANS})
 
 # Require libraries
