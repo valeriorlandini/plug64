@@ -23,10 +23,10 @@ Gain64AudioProcessorEditor::Gain64AudioProcessorEditor(Gain64AudioProcessor& p)
       customTypeface(juce::Typeface::createSystemTypefaceFor(BinaryData::Font_ttf, BinaryData::Font_ttfSize)),
       customFont(juce::Font(juce::FontOptions().withTypeface(customTypeface)))
 {
-    setSize(500, 250);
-    setResizeLimits(400, 200, 3000, 1500);
+    setSize(500, 280);
+    setResizeLimits(400, 224, 3000, 1680);
     setResizable(true, p.wrapperType != Gain64AudioProcessor::wrapperType_AudioUnitv3);
-    getConstrainer()->setFixedAspectRatio(2.0f);
+    getConstrainer()->setFixedAspectRatio(5.0f/2.8f);
 
     getLookAndFeel().setColour(juce::Label::textColourId, customLookAndFeel.textColour);
     getLookAndFeel().setDefaultSansSerifTypeface(customTypeface);
@@ -157,19 +157,19 @@ void Gain64AudioProcessorEditor::resized()
 
     chLabel.setJustificationType(juce::Justification::centredLeft);
     chLabel.setFont(customFont.withHeight(fontSize));
-    chLabel.setBounds(blockUI, blockUI * 6, blockUI * 2, blockUI);
+    chLabel.setBounds(blockUI, blockUI * 7, blockUI * 2, blockUI);
 
     chGainLabel.setJustificationType(juce::Justification::bottomLeft);
-    chGainLabel.setBounds(blockUI * 5, blockUI * 5, blockUI * 3, blockUI);
+    chGainLabel.setBounds(blockUI * 5, blockUI * 6, blockUI * 3, blockUI);
     chGainLabel.setFont(customFont.withHeight(fontSize * 0.75f));
 
-    selectChBox.setBounds((int)((float)blockUI * 2.5f), blockUI * 6, (int)((float)blockUI * 1.5f), blockUI);
+    selectChBox.setBounds((int)((float)blockUI * 2.5f), blockUI * 7, (int)((float)blockUI * 1.5f), blockUI);
 
     for (unsigned int ch = 0; ch < MAX_CHANS; ++ch)
     {
         if ((unsigned int)(selectChBox.getSelectedId()) - 1 == ch)
         {
-            chGainSliders[ch].setBounds(blockUI * 5, blockUI * 6, blockUI * 10, blockUI);
+            chGainSliders[ch].setBounds(blockUI * 5, blockUI * 7, blockUI * 10, blockUI);
             chGainSliders[ch].setTextBoxStyle(juce::Slider::TextBoxLeft, false, blockUI * 10, blockUI);
         }
         else

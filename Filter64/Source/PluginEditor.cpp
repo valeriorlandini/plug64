@@ -23,10 +23,10 @@ Filter64AudioProcessorEditor::Filter64AudioProcessorEditor(Filter64AudioProcesso
       customTypeface(juce::Typeface::createSystemTypefaceFor(BinaryData::Font_ttf, BinaryData::Font_ttfSize)),
       customFont(juce::Font(juce::FontOptions().withTypeface(customTypeface)))
 {
-    setSize(500, 375);
-    setResizeLimits(400, 300, 3000, 2250);
+    setSize(500, 410);
+    setResizeLimits(400, 328, 3000, 2460);
     setResizable(true, p.wrapperType != Filter64AudioProcessor::wrapperType_AudioUnitv3);
-    getConstrainer()->setFixedAspectRatio(4.0f/3.0f);
+    getConstrainer()->setFixedAspectRatio(5.0f/4.1f);
 
     getLookAndFeel().setColour(juce::Label::textColourId, customLookAndFeel.textColour);
     getLookAndFeel().setDefaultSansSerifTypeface(customTypeface);
@@ -276,39 +276,39 @@ void Filter64AudioProcessorEditor::resized()
 
     chLabel.setJustificationType(juce::Justification::centredLeft);
     chLabel.setFont(customFont.withHeight(fontSize));
-    chLabel.setBounds(blockUI, blockUI * 8, blockUI * 2, blockUI);
+    chLabel.setBounds(blockUI, blockUI * 9, blockUI * 2, blockUI);
 
     chTypeLabel.setJustificationType(juce::Justification::bottomLeft);
-    chTypeLabel.setBounds(blockUI * 5, blockUI * 7, blockUI * 3, blockUI);
+    chTypeLabel.setBounds(blockUI * 5, blockUI * 8, blockUI * 3, blockUI);
     chTypeLabel.setFont(customFont.withHeight(fontSize * 0.75f));
 
     chResonanceLabel.setJustificationType(juce::Justification::bottomLeft);
-    chResonanceLabel.setBounds((int)((float)blockUI * 8.5f), blockUI * 7, blockUI * 4, blockUI);
+    chResonanceLabel.setBounds((int)((float)blockUI * 8.5f), blockUI * 8, blockUI * 4, blockUI);
     chResonanceLabel.setFont(customFont.withHeight(fontSize * 0.75f));
 
     chDriveLabel.setJustificationType(juce::Justification::bottomLeft);
-    chDriveLabel.setBounds(blockUI * 12, blockUI * 7, blockUI * 3, blockUI);
+    chDriveLabel.setBounds(blockUI * 12, blockUI * 8, blockUI * 3, blockUI);
     chDriveLabel.setFont(customFont.withHeight(fontSize * 0.75f));
 
     chCutoffLabel.setJustificationType(juce::Justification::bottomLeft);
-    chCutoffLabel.setBounds(blockUI * 5, blockUI * 9, blockUI * 3, blockUI);
+    chCutoffLabel.setBounds(blockUI * 5, blockUI * 10, blockUI * 3, blockUI);
     chCutoffLabel.setFont(customFont.withHeight(fontSize * 0.75f));
 
-    selectChBox.setBounds((int)((float)blockUI * 2.5f), blockUI * 8, (int)((float)blockUI * 1.5f), blockUI);
+    selectChBox.setBounds((int)((float)blockUI * 2.5f), blockUI * 9, (int)((float)blockUI * 1.5f), blockUI);
 
     for (unsigned int ch = 0; ch < MAX_CHANS; ++ch)
     {
         if ((unsigned int)(selectChBox.getSelectedId()) - 1 == ch)
         {
-            chFilterBoxes[ch].setBounds(blockUI * 5, blockUI * 8, blockUI * 3, blockUI);
+            chFilterBoxes[ch].setBounds(blockUI * 5, blockUI * 9, blockUI * 3, blockUI);
 
-            chResonanceSliders[ch].setBounds((int)((float)blockUI * 8.5f), blockUI * 8, blockUI * 3, blockUI);
+            chResonanceSliders[ch].setBounds((int)((float)blockUI * 8.5f), blockUI * 9, blockUI * 3, blockUI);
             chResonanceSliders[ch].setTextBoxStyle(juce::Slider::TextBoxLeft, false, blockUI * 3, blockUI);
 
-            chDriveSliders[ch].setBounds(blockUI * 12, blockUI * 8, blockUI * 3, blockUI);
+            chDriveSliders[ch].setBounds(blockUI * 12, blockUI * 9, blockUI * 3, blockUI);
             chDriveSliders[ch].setTextBoxStyle(juce::Slider::TextBoxLeft, false, blockUI * 3, blockUI);
 
-            chCutoffSliders[ch].setBounds(blockUI * 5, blockUI * 10, blockUI * 10, blockUI);
+            chCutoffSliders[ch].setBounds(blockUI * 5, blockUI * 11, blockUI * 10, blockUI);
             chCutoffSliders[ch].setTextBoxStyle(juce::Slider::TextBoxLeft, false, blockUI * 10, blockUI);
         }
         else
