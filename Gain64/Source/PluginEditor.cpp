@@ -23,15 +23,17 @@ Gain64AudioProcessorEditor::Gain64AudioProcessorEditor(Gain64AudioProcessor& p)
       customTypeface(juce::Typeface::createSystemTypefaceFor(BinaryData::Font_ttf, BinaryData::Font_ttfSize)),
       customFont(juce::Font(juce::FontOptions().withTypeface(customTypeface)))
 {
-    setSize(500, 280);
-    setResizeLimits(400, 224, 3000, 1680);
+    setSize(500, 310);
+    setResizeLimits(400, 248, 3000, 1860);
     setResizable(true, p.wrapperType != Gain64AudioProcessor::wrapperType_AudioUnitv3);
-    getConstrainer()->setFixedAspectRatio(5.0f/2.8f);
+    getConstrainer()->setFixedAspectRatio(5.0f/3.1f);
 
     getLookAndFeel().setColour(juce::Label::textColourId, customLookAndFeel.textColour);
     getLookAndFeel().setDefaultSansSerifTypeface(customTypeface);
 
     header.setText("Plug64", juce::dontSendNotification);
+    header.setColour(juce::Label::textColourId, customLookAndFeel.backgroundColour);
+    header.setColour(juce::Label::backgroundColourId, customLookAndFeel.textColour);
     addAndMakeVisible(header);
     title.setText("GAIN64", juce::dontSendNotification);
     addAndMakeVisible(title);
@@ -131,7 +133,7 @@ void Gain64AudioProcessorEditor::resized()
     customFont = customFont.withHeight(fontSize);
 
     header.setJustificationType(juce::Justification::left);
-    header.setBounds(blockUI, 0, blockUI * 14, blockUI * 2);
+    header.setBounds(blockUI, blockUI / 2, blockUI * 2, (int)fontSize);
     header.setFont(customFont.withHeight(fontSize));
     title.setJustificationType(juce::Justification::left);
     title.setBounds(blockUI, blockUI, blockUI * 14, blockUI * 2);
@@ -145,31 +147,31 @@ void Gain64AudioProcessorEditor::resized()
     resetButton.setCentrePosition(resetLabel.getX() - (int)((float)blockUI * 0.55f), resetLabel.getY() + (int)((float)resetLabel.getHeight() * 0.5f));
 
     masterLabel.setJustificationType(juce::Justification::centredLeft);
-    masterLabel.setBounds(blockUI, blockUI * 4, blockUI * 3, blockUI);
+    masterLabel.setBounds(blockUI, blockUI * 5, blockUI * 3, blockUI);
     masterLabel.setFont(customFont.withHeight(fontSize));
 
     masterGainLabel.setJustificationType(juce::Justification::bottomLeft);
-    masterGainLabel.setBounds(blockUI * 5, blockUI * 3, blockUI * 3, blockUI);
+    masterGainLabel.setBounds(blockUI * 5, blockUI * 4, blockUI * 3, blockUI);
     masterGainLabel.setFont(customFont.withHeight(fontSize * 0.75f));
 
-    masterGainSlider.setBounds(blockUI * 5, blockUI * 4, blockUI * 10, blockUI);
+    masterGainSlider.setBounds(blockUI * 5, blockUI * 5, blockUI * 10, blockUI);
     masterGainSlider.setTextBoxStyle(juce::Slider::TextBoxLeft, false, blockUI * 10, blockUI);
 
     chLabel.setJustificationType(juce::Justification::centredLeft);
     chLabel.setFont(customFont.withHeight(fontSize));
-    chLabel.setBounds(blockUI, blockUI * 7, blockUI * 2, blockUI);
+    chLabel.setBounds(blockUI, blockUI * 8, blockUI * 2, blockUI);
 
     chGainLabel.setJustificationType(juce::Justification::bottomLeft);
-    chGainLabel.setBounds(blockUI * 5, blockUI * 6, blockUI * 3, blockUI);
+    chGainLabel.setBounds(blockUI * 5, blockUI * 7, blockUI * 3, blockUI);
     chGainLabel.setFont(customFont.withHeight(fontSize * 0.75f));
 
-    selectChBox.setBounds((int)((float)blockUI * 2.5f), blockUI * 7, (int)((float)blockUI * 1.5f), blockUI);
+    selectChBox.setBounds((int)((float)blockUI * 2.5f), blockUI * 8, (int)((float)blockUI * 1.5f), blockUI);
 
     for (unsigned int ch = 0; ch < MAX_CHANS; ++ch)
     {
         if ((unsigned int)(selectChBox.getSelectedId()) - 1 == ch)
         {
-            chGainSliders[ch].setBounds(blockUI * 5, blockUI * 7, blockUI * 10, blockUI);
+            chGainSliders[ch].setBounds(blockUI * 5, blockUI * 8, blockUI * 10, blockUI);
             chGainSliders[ch].setTextBoxStyle(juce::Slider::TextBoxLeft, false, blockUI * 10, blockUI);
         }
         else
