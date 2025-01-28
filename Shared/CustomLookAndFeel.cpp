@@ -84,7 +84,7 @@ void CustomLookAndFeel::positionComboBoxText(juce::ComboBox& box, juce::Label& l
     label.setJustificationType(juce::Justification::centred);
 }
 
-juce::PopupMenu::Options CustomLookAndFeel::getOptionsForComboBoxPopupMenu (juce::ComboBox& box, juce::Label&)
+juce::PopupMenu::Options CustomLookAndFeel::getOptionsForComboBoxPopupMenu(juce::ComboBox& box, juce::Label&)
 {
     juce::PopupMenu::Options options;
     juce::Rectangle<int> bounds = box.getScreenBounds();
