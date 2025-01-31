@@ -45,5 +45,6 @@ juce_add_binary_data(BinaryData SOURCES
         Resources/Font.ttf
 )
 
+add_subdirectory(Delay64)
 add_subdirectory(Filter64)
 add_subdirectory(Gain64)

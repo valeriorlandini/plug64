@@ -162,9 +162,9 @@ void Filter64AudioProcessor::prepareToPlay(double sampleRate, int samplesPerBloc
     for (unsigned int ch = 0; ch < (unsigned int)std::min(getTotalNumInputChannels(), MAX_CHANS); ++ch)
     {
         processorChains.at(ch).prepare(spec);
-
-        updateParams();
     }
+    
+    updateParams();
 }
 
 void Filter64AudioProcessor::releaseResources()
@@ -199,11 +199,12 @@ void Filter64AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 
     juce::dsp::AudioBlock<float> block(buffer);
 
+    updateParams();
+
     for (unsigned int ch = 0; ch < (unsigned int)totalNumInputChannels; ++ch)
     {
         if (ch < MAX_CHANS)
         {
-            updateParams();
             auto channelBlock = block.getSingleChannelBlock(ch);
             juce::dsp::ProcessContextReplacing<float> context(channelBlock);
             processorChains.at(ch).process(context);
