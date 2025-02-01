@@ -90,6 +90,8 @@ private:
     std::array<juce::dsp::ProcessorChain<juce::dsp::DelayLine<float>, juce::dsp::DelayLine<float>>, MAX_CHANS> processorChains;
     std::array<juce::dsp::Gain<float>, MAX_CHANS> chFeedbackGains;
     juce::dsp::Gain<float> masterFeedbackGain;
+    std::array<juce::SmoothedValue<float>, MAX_CHANS> masterTimeSmoothers;
+    std::array<juce::SmoothedValue<float>, MAX_CHANS> chTimeSmoothers;
 
     inline void updateParams()
     {
@@ -104,7 +106,8 @@ private:
             {
                 
             }
-            chDelays.at(ch).set_time(*(chTimeParameters.at(ch)));
+            chTimeSmoothers.at(ch).setTargetValue(*(chTimeParameters.at(ch)));
+            
             processorChains.at(ch).get<0>().setDelay(chDelaySamples.at(ch));
             chDelays.at(ch).set_feedback(*(chFeedbackParameters.at(ch)) * 0.01f);
             chFeedbackGains.at(ch).setGainLinear(*(chFeedbackParameters.at(ch)) * 0.01f);
@@ -118,7 +121,8 @@ private:
             {
 
             }
-            masterDelays.at(ch).set_time(*masterTimeParameter);
+            masterTimeSmoothers.at(ch).setTargetValue(*masterTimeParameter);
+            
             processorChains.at(ch).get<1>().setDelay(masterDelaySamples);
             masterDelays.at(ch).set_feedback(*masterFeedbackParameter * 0.01f);
             masterFeedbackGain.setGainLinear(*masterFeedbackParameter * 0.01f);

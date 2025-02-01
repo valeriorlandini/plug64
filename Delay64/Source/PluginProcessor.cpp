@@ -217,11 +217,13 @@ void Delay64AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
             {
                 // Channel delay
                 const float chDelayed = chDelays.at(ch).run(channelData[i]);
+                chDelays.at(ch).set_time(chTimeSmoothers.at(ch).getNextValue());
                 /*processorChains.at(ch).get<0>().pushSample(0, channelData[i] + chFeedbackGains.at(ch).processSample(chDelayed));*/
                 auto chSample = chDelayed * (*(chMixParameters.at(ch)) * 0.01f) + channelData[i] * (1.0f - (*(chMixParameters.at(ch)) * 0.01f));
 
                 // Master delay
                 const float masterDelayed = masterDelays.at(ch).run(chSample);
+                masterDelays.at(ch).set_time(masterTimeSmoothers.at(ch).getNextValue());
                 /*processorChains.at(ch).get<1>().pushSample(0, chSample + masterFeedbackGain.processSample(masterDelayed));*/
                 channelData[i] = masterDelayed * (*masterMixParameter * 0.01f) + chSample * (1.0f - (*masterMixParameter * 0.01f));
             }
