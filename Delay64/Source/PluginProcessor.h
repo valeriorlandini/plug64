@@ -92,19 +92,21 @@ private:
     juce::dsp::Gain<float> masterFeedbackGain;
     std::array<juce::SmoothedValue<float>, MAX_CHANS> masterTimeSmoothers;
     std::array<juce::SmoothedValue<float>, MAX_CHANS> chTimeSmoothers;
+    juce::AudioPlayHead::PositionInfo currPosInfo;
 
     inline void updateParams()
     {
         for (unsigned int ch = 0; ch < MAX_CHANS; ++ch)
         {
             auto chSync = static_cast<int>(*(chSyncParameters.at(ch)));
-            if (chSync == 0)
+            auto bpm = currPosInfo.getBpm();
+            if (chSync == 0 || !bpm.hasValue())
             {
                 chDelaySamples.at(ch) = *(chTimeParameters.at(ch)) * static_cast<float>(getSampleRate()) * 0.001f;
             }
             else
             {
-                
+                chDelaySamples.at(ch) = 60000.0f / static_cast<float>(*bpm) * static_cast<float>(chSync) * static_cast<float>(getSampleRate()) * 0.001f;          
             }
             chTimeSmoothers.at(ch).setTargetValue(*(chTimeParameters.at(ch)));
             
@@ -113,13 +115,13 @@ private:
             chFeedbackGains.at(ch).setGainLinear(*(chFeedbackParameters.at(ch)) * 0.01f);
             
             auto masterSync = static_cast<int>(*masterSyncParameter);
-            if (masterSync == 0)
+            if (masterSync == 0 || !bpm.hasValue())
             {
                 masterDelaySamples = *masterTimeParameter * static_cast<float>(getSampleRate()) * 0.001f;
             }
             else
             {
-
+                masterDelaySamples = 60000.0f / static_cast<float>(*bpm) * static_cast<float>(masterSync) * static_cast<float>(getSampleRate()) * 0.001f;
             }
             masterTimeSmoothers.at(ch).setTargetValue(*masterTimeParameter);
             

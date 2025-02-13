@@ -118,12 +118,10 @@ Delay64AudioProcessorEditor::Delay64AudioProcessorEditor(Delay64AudioProcessor& 
     masterSyncBox.setScrollWheelEnabled(true);
     addAndMakeVisible(masterSyncBox);
     masterSyncBox.addItem("NONE", 1);
-    masterSyncBox.addItem("LPF12", 2);
-    masterSyncBox.addItem("HPF12", 3);
-    masterSyncBox.addItem("BPF12", 4);
-    masterSyncBox.addItem("LPF24", 5);
-    masterSyncBox.addItem("HPF24", 6);
-    masterSyncBox.addItem("BPF24", 7);
+    for (auto i = 1; i <= 16; ++i)
+    {
+        masterSyncBox.addItem(std::to_string(i) + "/16", i+1);
+    }
     masterSyncAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(p.treeState, "mastersync", masterSyncBox);
 
     chLabel.setText("CHAN", juce::dontSendNotification);
@@ -203,12 +201,10 @@ Delay64AudioProcessorEditor::Delay64AudioProcessorEditor(Delay64AudioProcessor& 
         chSyncBoxes[ch].setScrollWheelEnabled(true);
         addAndMakeVisible(chSyncBoxes[ch]);
         chSyncBoxes[ch].addItem("NONE", 1);
-        chSyncBoxes[ch].addItem("LPF12", 2);
-        chSyncBoxes[ch].addItem("HPF12", 3);
-        chSyncBoxes[ch].addItem("BPF12", 4);
-        chSyncBoxes[ch].addItem("LPF24", 5);
-        chSyncBoxes[ch].addItem("HPF24", 6);
-        chSyncBoxes[ch].addItem("BPF24", 7);
+        for (auto i = 1; i <= 16; ++i)
+        {
+            chSyncBoxes[ch].addItem(std::to_string(i) + "/16", i+1);
+        }
         paramID = "chsync" + ch_str;
         chSyncAttachments[ch] = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(p.treeState, paramID, chSyncBoxes[ch]);
     }
