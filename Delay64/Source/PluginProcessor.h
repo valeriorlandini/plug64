@@ -75,59 +75,62 @@ public:
     std::array<std::atomic<float>*, MAX_CHANS> chTimeParameters = {nullptr};
     std::array<std::atomic<float>*, MAX_CHANS> chFeedbackParameters = {nullptr};
     std::array<std::atomic<float>*, MAX_CHANS> chMixParameters = {nullptr};
-    std::array<float, MAX_CHANS> chDelaySamples = {1.0f};
+    std::array<float, MAX_CHANS> chDelayTimes = {1000.0f};
     std::atomic<float>* masterSyncParameter = nullptr;
     std::atomic<float>* masterTimeParameter = nullptr;
     std::atomic<float>* masterFeedbackParameter = nullptr;
     std::atomic<float>* masterMixParameter = nullptr;
-    float masterDelaySamples = 1.0f;
+    float masterDelayTime = 1000.0f;
 
     juce::Value selChannel;
 
 private:
     std::array<soutel::Delay<float>, MAX_CHANS> chDelays;
     std::array<soutel::Delay<float>, MAX_CHANS> masterDelays;
-    std::array<juce::dsp::ProcessorChain<juce::dsp::DelayLine<float>, juce::dsp::DelayLine<float>>, MAX_CHANS> processorChains;
-    std::array<juce::dsp::Gain<float>, MAX_CHANS> chFeedbackGains;
-    juce::dsp::Gain<float> masterFeedbackGain;
     std::array<juce::SmoothedValue<float>, MAX_CHANS> masterTimeSmoothers;
     std::array<juce::SmoothedValue<float>, MAX_CHANS> chTimeSmoothers;
-    juce::AudioPlayHead::PositionInfo currPosInfo;
+    float bpm = 0.0f;
+    juce::AudioPlayHead::PositionInfo posInfo;
 
     inline void updateParams()
-    {
+    {            
+        auto masterSync = static_cast<int>(*masterSyncParameter);
+        if (masterSync == 0 || bpm < 1.0)
+        {
+            masterDelayTime = *masterTimeParameter;
+        }
+        else
+        {
+            masterDelayTime = (60000.0f / (bpm * 4.0f)) * static_cast<float>(masterSync);
+        }
+
         for (unsigned int ch = 0; ch < MAX_CHANS; ++ch)
         {
             auto chSync = static_cast<int>(*(chSyncParameters.at(ch)));
-            auto bpm = currPosInfo.getBpm();
-            if (chSync == 0 || !bpm.hasValue())
+            if (chSync == 0 || bpm < 1.0)
             {
-                chDelaySamples.at(ch) = *(chTimeParameters.at(ch)) * static_cast<float>(getSampleRate()) * 0.001f;
+                chDelayTimes.at(ch) = *(chTimeParameters.at(ch));
             }
             else
             {
-                chDelaySamples.at(ch) = 60000.0f / static_cast<float>(*bpm) * static_cast<float>(chSync) * static_cast<float>(getSampleRate()) * 0.001f;          
+                chDelayTimes.at(ch) = (60000.0f / (bpm * 4.0f)) * static_cast<float>(chSync);
             }
-            chTimeSmoothers.at(ch).setTargetValue(*(chTimeParameters.at(ch)));
+
+            if (chTimeSmoothers.at(ch).getTargetValue() != chDelayTimes.at(ch))
+            {  
+                chTimeSmoothers.at(ch).setTargetValue(chDelayTimes.at(ch));
+            }
             
-            processorChains.at(ch).get<0>().setDelay(chDelaySamples.at(ch));
+            chDelays.at(ch).set_time(chTimeSmoothers.at(ch).getNextValue());
             chDelays.at(ch).set_feedback(*(chFeedbackParameters.at(ch)) * 0.01f);
-            chFeedbackGains.at(ch).setGainLinear(*(chFeedbackParameters.at(ch)) * 0.01f);
-            
-            auto masterSync = static_cast<int>(*masterSyncParameter);
-            if (masterSync == 0 || !bpm.hasValue())
+
+            if (masterTimeSmoothers.at(ch).getTargetValue() != masterDelayTime)
             {
-                masterDelaySamples = *masterTimeParameter * static_cast<float>(getSampleRate()) * 0.001f;
+                masterTimeSmoothers.at(ch).setTargetValue(masterDelayTime);
             }
-            else
-            {
-                masterDelaySamples = 60000.0f / static_cast<float>(*bpm) * static_cast<float>(masterSync) * static_cast<float>(getSampleRate()) * 0.001f;
-            }
-            masterTimeSmoothers.at(ch).setTargetValue(*masterTimeParameter);
             
-            processorChains.at(ch).get<1>().setDelay(masterDelaySamples);
+            masterDelays.at(ch).set_time(masterTimeSmoothers.at(ch).getNextValue());
             masterDelays.at(ch).set_feedback(*masterFeedbackParameter * 0.01f);
-            masterFeedbackGain.setGainLinear(*masterFeedbackParameter * 0.01f);
         }
     }
 

@@ -35,7 +35,7 @@ Delay64AudioProcessor::Delay64AudioProcessor() :
 {
     juce::AudioProcessorValueTreeState::ParameterLayout layout;
 
-    layout.add(std::make_unique<juce::AudioParameterFloat>("mastersync", "Master Sync", juce::NormalisableRange<float>(0.0f, 10.0f, 1.0f), 0.0f));
+    layout.add(std::make_unique<juce::AudioParameterFloat>("mastersync", "Master Sync", juce::NormalisableRange<float>(0.0f, 16.0f, 1.0f), 0.0f));
     layout.add(std::make_unique<juce::AudioParameterFloat>("mastertime", "Master Time", juce::NormalisableRange<float>(0.0f, 5000.0f, 1.0f), 1000.0f));
     layout.add(std::make_unique<juce::AudioParameterFloat>("masterfeedback", "Master Feedback", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 25.0f));
     layout.add(std::make_unique<juce::AudioParameterFloat>("masterwet", "Master Wet", juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 25.0f));
@@ -47,7 +47,7 @@ Delay64AudioProcessor::Delay64AudioProcessor() :
 
         parameterID = "chsync" + ch_str;
         parameterName = "Channel " + ch_str + " Sync";
-        layout.add(std::make_unique<juce::AudioParameterFloat>(parameterID, parameterName,juce::NormalisableRange<float>(0.0f, 10.0f, 1.0f), 0.0f));
+        layout.add(std::make_unique<juce::AudioParameterFloat>(parameterID, parameterName,juce::NormalisableRange<float>(0.0f, 16.0f, 1.0f), 0.0f));
 
         parameterID = "chtime" + ch_str;
         parameterName = "Channel " + ch_str + " Time";
@@ -159,13 +159,10 @@ void Delay64AudioProcessor::changeProgramName(int index, const juce::String& new
 
 void Delay64AudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
-    juce::dsp::ProcessSpec spec{sampleRate, (juce::uint32)samplesPerBlock, 1};
-
+    juce::ignoreUnused(samplesPerBlock);
+    
     for (unsigned int ch = 0; ch < (unsigned int)std::min(getTotalNumInputChannels(), MAX_CHANS); ++ch)
     {
-        processorChains.at(ch).prepare(spec);
-        processorChains.at(ch).get<0>().setMaximumDelayInSamples(5 * static_cast<int>(sampleRate));
-        processorChains.at(ch).get<1>().setMaximumDelayInSamples(5 * static_cast<int>(sampleRate));
         chDelays.at(ch).set_sample_rate(static_cast<float>(sampleRate));
         masterDelays.at(ch).set_sample_rate(static_cast<float>(sampleRate));
         chDelays.at(ch).set_max_time(5000.0f, true);
@@ -205,6 +202,15 @@ void Delay64AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
         buffer.clear(i, 0, buffer.getNumSamples());
     }
 
+    auto currPlayHead = getPlayHead();
+    if (currPlayHead)
+    {
+        posInfo = *(currPlayHead->getPosition());
+        {
+            bpm = static_cast<float>(*(posInfo.getBpm()));
+        }
+    }
+    
     updateParams();
 
     for (unsigned int ch = 0; ch < (unsigned int)totalNumInputChannels; ++ch)
@@ -217,14 +223,10 @@ void Delay64AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
             {
                 // Channel delay
                 const float chDelayed = chDelays.at(ch).run(channelData[i]);
-                chDelays.at(ch).set_time(chTimeSmoothers.at(ch).getNextValue());
-                /*processorChains.at(ch).get<0>().pushSample(0, channelData[i] + chFeedbackGains.at(ch).processSample(chDelayed));*/
                 auto chSample = chDelayed * (*(chMixParameters.at(ch)) * 0.01f) + channelData[i] * (1.0f - (*(chMixParameters.at(ch)) * 0.01f));
 
                 // Master delay
                 const float masterDelayed = masterDelays.at(ch).run(chSample);
-                masterDelays.at(ch).set_time(masterTimeSmoothers.at(ch).getNextValue());
-                /*processorChains.at(ch).get<1>().pushSample(0, chSample + masterFeedbackGain.processSample(masterDelayed));*/
                 channelData[i] = masterDelayed * (*masterMixParameter * 0.01f) + chSample * (1.0f - (*masterMixParameter * 0.01f));
             }
         }
