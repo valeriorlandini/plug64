@@ -1,0 +1,3 @@
+[submodule "Shared/soutel"]
+	path = Shared/soutel
+	url = https://github.com/valeriorlandini/soutel.git
