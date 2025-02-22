@@ -48,3 +48,4 @@ juce_add_binary_data(BinaryData SOURCES
 add_subdirectory(Delay64)
 add_subdirectory(Filter64)
 add_subdirectory(Gain64)
+add_subdirectory(Ring64)

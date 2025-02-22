@@ -160,7 +160,7 @@ void Delay64AudioProcessor::changeProgramName(int index, const juce::String& new
 void Delay64AudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
     juce::ignoreUnused(samplesPerBlock);
-    
+
     for (unsigned int ch = 0; ch < (unsigned int)std::min(getTotalNumInputChannels(), MAX_CHANS); ++ch)
     {
         chDelays.at(ch).set_sample_rate(static_cast<float>(sampleRate));
@@ -210,17 +210,24 @@ void Delay64AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
             bpm = static_cast<float>(*(posInfo.getBpm()));
         }
     }
-    
+
     updateParams();
 
     for (unsigned int ch = 0; ch < (unsigned int)totalNumInputChannels; ++ch)
-    {   
+    {
         auto* channelData = buffer.getWritePointer(ch);
 
         if (ch < MAX_CHANS)
         {
             for (auto i = 0; i < buffer.getNumSamples(); ++i)
             {
+                // Update delay time with smoothed values, since it cycles across all channels,
+                // we need to update it only once per buffer
+                if (ch == 0)
+                {
+                    updateParams(true);
+                }
+
                 // Channel delay
                 const float chDelayed = chDelays.at(ch).run(channelData[i]);
                 auto chSample = chDelayed * (*(chMixParameters.at(ch)) * 0.01f) + channelData[i] * (1.0f - (*(chMixParameters.at(ch)) * 0.01f));

@@ -36,7 +36,7 @@ Delay64AudioProcessorEditor::Delay64AudioProcessorEditor(Delay64AudioProcessor& 
     header.setColour(juce::Label::backgroundColourId, customLookAndFeel.textColour);
     addAndMakeVisible(header);
 
-    title.setText("FILTER64", juce::dontSendNotification);
+    title.setText("DELAY64", juce::dontSendNotification);
     addAndMakeVisible(title);
 
     resetLabel.setText("RESET CH PARAMS", juce::dontSendNotification);
@@ -81,9 +81,9 @@ Delay64AudioProcessorEditor::Delay64AudioProcessorEditor(Delay64AudioProcessor& 
     masterWetLabel.setJustificationType(juce::Justification::left);
     addAndMakeVisible(masterWetLabel);
 
-    masterTypeLabel.setText("SYNC", juce::dontSendNotification);
-    masterTypeLabel.setJustificationType(juce::Justification::left);
-    addAndMakeVisible(masterTypeLabel);
+    masterSyncLabel.setText("SYNC", juce::dontSendNotification);
+    masterSyncLabel.setJustificationType(juce::Justification::left);
+    addAndMakeVisible(masterSyncLabel);
 
     masterTimeSlider.setLookAndFeel(&customLookAndFeel);
     masterTimeSlider.setColour(juce::Slider::trackColourId, customLookAndFeel.mainMasterSliderColour);
@@ -140,9 +140,9 @@ Delay64AudioProcessorEditor::Delay64AudioProcessorEditor(Delay64AudioProcessor& 
     chWetLabel.setJustificationType(juce::Justification::left);
     addAndMakeVisible(chWetLabel);
 
-    chTypeLabel.setText("SYNC", juce::dontSendNotification);
-    chTypeLabel.setJustificationType(juce::Justification::left);
-    addAndMakeVisible(chTypeLabel);
+    chSyncLabel.setText("SYNC", juce::dontSendNotification);
+    chSyncLabel.setJustificationType(juce::Justification::left);
+    addAndMakeVisible(chSyncLabel);
 
     selectChBox.setLookAndFeel(&customLookAndFeel);
     selectChBox.setColour(juce::ComboBox::backgroundColourId, juce::Colours::transparentBlack);
@@ -247,9 +247,9 @@ void Delay64AudioProcessorEditor::resized()
     masterLabel.setBounds(blockUI, blockUI * 5, blockUI * 3, blockUI);
     masterLabel.setFont(customFont.withHeight(fontSize));
 
-    masterTypeLabel.setJustificationType(juce::Justification::bottomLeft);
-    masterTypeLabel.setBounds(blockUI * 5, blockUI * 4, blockUI * 3, blockUI);
-    masterTypeLabel.setFont(customFont.withHeight(fontSize * 0.75f));
+    masterSyncLabel.setJustificationType(juce::Justification::bottomLeft);
+    masterSyncLabel.setBounds(blockUI * 5, blockUI * 4, blockUI * 3, blockUI);
+    masterSyncLabel.setFont(customFont.withHeight(fontSize * 0.75f));
 
     masterFeedbackLabel.setJustificationType(juce::Justification::bottomLeft);
     masterFeedbackLabel.setBounds((int)((float)blockUI * 8.5f), blockUI * 4, blockUI * 3, blockUI);
@@ -278,9 +278,9 @@ void Delay64AudioProcessorEditor::resized()
     chLabel.setFont(customFont.withHeight(fontSize));
     chLabel.setBounds(blockUI, blockUI * 10, blockUI * 2, blockUI);
 
-    chTypeLabel.setJustificationType(juce::Justification::bottomLeft);
-    chTypeLabel.setBounds(blockUI * 5, blockUI * 9, blockUI * 3, blockUI);
-    chTypeLabel.setFont(customFont.withHeight(fontSize * 0.75f));
+    chSyncLabel.setJustificationType(juce::Justification::bottomLeft);
+    chSyncLabel.setBounds(blockUI * 5, blockUI * 9, blockUI * 3, blockUI);
+    chSyncLabel.setFont(customFont.withHeight(fontSize * 0.75f));
 
     chFeedbackLabel.setJustificationType(juce::Justification::bottomLeft);
     chFeedbackLabel.setBounds((int)((float)blockUI * 8.5f), blockUI * 9, blockUI * 4, blockUI);

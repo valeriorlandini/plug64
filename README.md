@@ -21,7 +21,7 @@ Coming soon!
 
 ## How to build
 
-Grab the source with `git clone https://github.com/valeriorlandini/plug64.git`
+Grab the source with `git clone --recurse-submodules https://github.com/valeriorlandini/plug64.git`
 
 `cd plug64` and then create the necessary build files with:
 * `cmake -S . -B build -G "Visual Studio 17 2022"` on Windows (adjust the Visual Studio version if you have an older one.)

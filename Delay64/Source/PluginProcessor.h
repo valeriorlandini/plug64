@@ -33,7 +33,7 @@ Plug64. If not, see <https://www.gnu.org/licenses/>.
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <juce_gui_extra/juce_gui_extra.h>
 #include "BinaryData.h"
-#include "delay.h"
+#include "soutel/include/soutel/delay.h"
 
 class Delay64AudioProcessor : public juce::AudioProcessor
 {
@@ -92,45 +92,53 @@ private:
     float bpm = 0.0f;
     juce::AudioPlayHead::PositionInfo posInfo;
 
-    inline void updateParams()
-    {            
-        auto masterSync = static_cast<int>(*masterSyncParameter);
-        if (masterSync == 0 || bpm < 1.0)
+    inline void updateParams(const bool &onlySmoothers = false)
+    {
+        if (!onlySmoothers)
         {
-            masterDelayTime = *masterTimeParameter;
-        }
-        else
-        {
-            masterDelayTime = (60000.0f / (bpm * 4.0f)) * static_cast<float>(masterSync);
+            auto masterSync = static_cast<int>(*masterSyncParameter);
+            if (masterSync == 0 || bpm < 1.0)
+            {
+                masterDelayTime = *masterTimeParameter;
+            }
+            else
+            {
+                masterDelayTime = (60000.0f / (bpm * 4.0f)) * static_cast<float>(masterSync);
+            }
         }
 
         for (unsigned int ch = 0; ch < MAX_CHANS; ++ch)
         {
-            auto chSync = static_cast<int>(*(chSyncParameters.at(ch)));
-            if (chSync == 0 || bpm < 1.0)
+            if (!onlySmoothers)
             {
-                chDelayTimes.at(ch) = *(chTimeParameters.at(ch));
-            }
-            else
-            {
-                chDelayTimes.at(ch) = (60000.0f / (bpm * 4.0f)) * static_cast<float>(chSync);
+                auto chSync = static_cast<int>(*(chSyncParameters.at(ch)));
+                if (chSync == 0 || bpm < 1.0)
+                {
+                    chDelayTimes.at(ch) = *(chTimeParameters.at(ch));
+                }
+                else
+                {
+                    chDelayTimes.at(ch) = (60000.0f / (bpm * 4.0f)) * static_cast<float>(chSync);
+                }
+
+                if (!juce::exactlyEqual(chTimeSmoothers.at(ch).getTargetValue(), chDelayTimes.at(ch)))
+                {
+                    chTimeSmoothers.at(ch).setTargetValue(chDelayTimes.at(ch));
+                }
+
+                chDelays.at(ch).set_feedback(*(chFeedbackParameters.at(ch)) * 0.01f);
+
+
+                if (!juce::exactlyEqual(masterTimeSmoothers.at(ch).getTargetValue(), masterDelayTime))
+                {
+                    masterTimeSmoothers.at(ch).setTargetValue(masterDelayTime);
+                }
+
+                masterDelays.at(ch).set_feedback(*masterFeedbackParameter * 0.01f);
             }
 
-            if (chTimeSmoothers.at(ch).getTargetValue() != chDelayTimes.at(ch))
-            {  
-                chTimeSmoothers.at(ch).setTargetValue(chDelayTimes.at(ch));
-            }
-            
-            chDelays.at(ch).set_time(chTimeSmoothers.at(ch).getNextValue());
-            chDelays.at(ch).set_feedback(*(chFeedbackParameters.at(ch)) * 0.01f);
-
-            if (masterTimeSmoothers.at(ch).getTargetValue() != masterDelayTime)
-            {
-                masterTimeSmoothers.at(ch).setTargetValue(masterDelayTime);
-            }
-            
             masterDelays.at(ch).set_time(masterTimeSmoothers.at(ch).getNextValue());
-            masterDelays.at(ch).set_feedback(*masterFeedbackParameter * 0.01f);
+            chDelays.at(ch).set_time(chTimeSmoothers.at(ch).getNextValue());
         }
     }
 

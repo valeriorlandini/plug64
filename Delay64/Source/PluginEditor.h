@@ -38,7 +38,7 @@ private:
     juce::ShapeButton resetButton{"reset", juce::Colour(243, 255, 148), juce::Colour(243, 255, 148), juce::Colour(214, 108, 87)};
     juce::Line<int> headerLine;
     juce::Label masterLabel;
-    juce::Label masterTypeLabel;
+    juce::Label masterSyncLabel;
     juce::Label masterFeedbackLabel;
     juce::Label masterWetLabel;
     juce::Label masterTimeLabel;
@@ -53,7 +53,7 @@ private:
     juce::Label chLabel;
     juce::Label chTimeLabel;
     juce::Label chWetLabel;
-    juce::Label chTypeLabel;
+    juce::Label chSyncLabel;
     juce::Label chFeedbackLabel;
     juce::ComboBox selectChBox;
     juce::Slider selectChSlider;
