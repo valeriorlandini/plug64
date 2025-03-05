@@ -7,13 +7,21 @@ Moreover, these plugins allow not only to apply a master effect on all the chann
 
 Other plugins coming soon!
 
-### Gain64
+### Delay64
 
-A gain adjustment plugin.
+A delay, optionally tempo-synced, with adjustable feedback and wet amount. Each channel has its own delay, plus there is a master delay in series applied to all channels.
 
 ### Filter64
 
 A ladder filter with adjustable resonance (up to self-oscillation) and drive. Six different modes (lowpass, bandpass and highpass, each with 12 dB or 24 dB slope) can be chosen.
+
+### Gain64
+
+A gain adjustment plugin.
+
+### Ring64
+
+A ring modulator with different modulators (including incoming audio inputs), allowing intricate modulation paths across channels.
 
 ## Pre-built binaries
 
